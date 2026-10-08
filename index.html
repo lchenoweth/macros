@@ -258,7 +258,7 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
 'use strict';
 
 /* ================= CONSTANTS ================= */
-var APP_VERSION = '1.1.0';
+var APP_VERSION = '1.2.0';
 var KEY = 'macroPlanner.v1';
 var MAC = ['cal','p','c','f'];
 var MEALS = [
@@ -408,7 +408,7 @@ function status(m, planned){
 }
 function dayHit(d){
   if(!d) return false;
-  var t = dayTotals(d);
+  var t = eatenTotals(d);
   return MAC.every(function(m){ return status(m, t[m]).k==='on'; });
 }
 function devScore(sum, goal){
@@ -478,34 +478,45 @@ function mealTarget(d, meal){
   var w = open.reduce(function(s,m){ return s+WEIGHTS[m]; }, 0) || 1;
   return {t:clampM(scaleM(left, WEIGHTS[meal]/w)), left:left, closing:false};
 }
-function buildIdeas(meal, tgt, left){
-  var tol = S.settings.tol;
-  var pool = S.library.filter(function(i){ return i.cat!=='Dinners' && i.cal>0; });
+var comboCache = {sig:null, byMeal:{}};
+function libSig(){ return S.library.map(function(i){ return i.id+':'+i.cat+':'+i.cal+':'+i.p+':'+i.c+':'+i.f; }).join(';'); }
+function combosFor(meal){
+  var sig = libSig();
+  if(comboCache.sig !== sig) comboCache = {sig:sig, byMeal:{}};
+  if(comboCache.byMeal[meal]) return comboCache.byMeal[meal];
+  var pool = S.library.filter(function(i){ return i.cat!=='Dinners' && i.cal>0 && i.id!=='coffee'; });
   var sides = pool.filter(function(i){ return i.cat==='Sides & Extras'; });
   var mains = pool.filter(function(i){ return i.cat!=='Sides & Extras'; });
-  var aff = AFFINITY[meal] || [];
-  var out = [];
-  function consider(parts){
+  var aff = AFFINITY[meal] || [], list = [];
+  function push(parts){
     var sum = zero();
     parts.forEach(function(p){ sum = addM(sum, scaleM(p.it, p.q)); });
-    var ds = devScore(sum, tgt), s = ds.s, over = false;
-    ['cal','c','f'].forEach(function(m){
-      var o = sum[m] - left[m];
-      if(o > tol[m]){ over = true; s += 25 + 5*Math.pow(o/Math.max(0.1,tol[m]), 2); }
-    });
-    if(!parts.some(function(p){ return aff.indexOf(p.it.cat) >= 0; })) s += 2;
-    if(parts.length > 1) s += 0.5;
-    var fits = !over && Math.abs(sum.cal - tgt.cal) <= Math.max(120, tgt.cal*0.4);
-    out.push({parts:parts, sum:sum, score:s, hit:ds.hit, fits:fits});
+    var pen = (parts.some(function(p){ return aff.indexOf(p.it.cat) >= 0; }) ? 0 : 2) + (parts.length > 1 ? 0.5 : 0);
+    list.push({parts:parts, sum:sum, pen:pen});
   }
-  pool.forEach(function(it){ QTYS.forEach(function(q){ consider([{it:it,q:q}]); }); });
+  pool.forEach(function(it){ QTYS.forEach(function(q){ push([{it:it,q:q}]); }); });
   mains.forEach(function(m){ sides.forEach(function(sd){
-    QTYS.forEach(function(qm){ QTYS.forEach(function(qs){ consider([{it:m,q:qm},{it:sd,q:qs}]); }); });
+    QTYS.forEach(function(qm){ QTYS.forEach(function(qs){ push([{it:m,q:qm},{it:sd,q:qs}]); }); });
   }); });
-  out.sort(function(a,b){ return a.score-b.score; });
+  comboCache.byMeal[meal] = list;
+  return list;
+}
+function buildIdeas(meal, tgt, left){
+  var tol = S.settings.tol, list = combosFor(meal), out = [], cand = [];
+  var lim = Math.max(120, tgt.cal*0.4);
+  var tc = Math.max(0.1,tol.cal), tp = Math.max(0.1,tol.p), tcc = Math.max(0.1,tol.c), tf = Math.max(0.1,tol.f);
+  for(var i=0;i<list.length;i++){
+    var o = list[i], sum = o.sum;
+    if(Math.abs(sum.cal - tgt.cal) > lim) continue;
+    if(sum.cal - left.cal > tol.cal || sum.c - left.c > tol.c || sum.f - left.f > tol.f) continue;
+    var n1 = Math.abs(sum.cal-tgt.cal)/tc, n2 = Math.abs(sum.p-tgt.p)/tp, n3 = Math.abs(sum.c-tgt.c)/tcc, n4 = Math.abs(sum.f-tgt.f)/tf;
+    var sc = 1.5*(n1<=1?0.25*n1*n1:n1*n1-0.75) + 1.2*(n2<=1?0.25*n2*n2:n2*n2-0.75) + (n3<=1?0.25*n3*n3:n3*n3-0.75) + (n4<=1?0.25*n4*n4:n4*n4-0.75);
+    cand.push([sc + o.pen, i, n1<=1&&n2<=1&&n3<=1&&n4<=1]);
+  }
+  cand.sort(function(a,b){ return a[0]-b[0]; });
+  for(var j=0;j<cand.length && j<400;j++){ var oo = list[cand[j][1]]; out.push({parts:oo.parts, sum:oo.sum, score:cand[j][0], hit:cand[j][2], fits:true}); }
   var seenCombo = {}, uniq = [];
   out.forEach(function(o){
-    if(!o.fits) return;
     var k = o.parts.map(function(p){ return p.it.id; }).join('+');
     if(seenCombo[k]) return; seenCombo[k] = 1; uniq.push(o);
   });
@@ -534,7 +545,7 @@ function sumW(list){ return list.reduce(function(s,m){ return s+WEIGHTS[m]; }, 0
 
 function genPlan(d, avoid){
   var open = openMeals(d), base = subM(S.settings.targets, dayTotals(d)), results = [];
-  for(var t=0; t<36; t++){
+  for(var t=0; t<20; t++){
     var picks = {}, used = {}, rem = base, sum = zero(), empty = 0;
     for(var i=0; i<open.length; i++){
       var m = open[i], last = i===open.length-1;
@@ -848,6 +859,7 @@ function boardHTML(){
   }
   return '<div class="card-h"><h2>Challenge board</h2><span class="tag">6 weeks</span></div>'+
     '<div class="boardcount"><div class="bignum">'+hits+'</div><span>/42 days on target</span></div>'+
+    '<p class="hint" style="margin:0 0 10px;color:var(--blockMuted)">A day counts when everything you checked off as eaten lands within your tolerance.</p>'+
     '<div class="board">'+heads+cells+'</div>'+
     '<div class="legend"><span><i style="background:var(--pink)"></i>On target</span><span><i style="background:#3A3233"></i>Missed</span><span><i style="background:#2E2728;border:1px solid #4a4042"></i>Upcoming</span></div>';
 }
