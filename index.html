@@ -1,594 +1,1163 @@
-<!doctype html>
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Dinner-First Macros</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Macros">
+<meta name="application-name" content="Macros">
+<meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#221E1E">
-<link rel="apple-touch-icon" href="data:image/png;base64,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">
-<link rel="icon" href="data:image/png;base64,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">
-<style>:root{padding-top:env(safe-area-inset-top,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.LOCAL_SEED={"settings": {"targets": {"cal": 1650, "p": 135, "c": 150, "f": 55}, "example": true, "start": "2026-10-18", "waterGoal": 8, "dailyOn": {"coffee": true}, "daily": {"coffee": [{"name": "Protein coffee (ON Vanilla Ice Cream)", "cal": 125, "p": 24, "c": 4, "f": 1.5, "q": 1}]}}, "library": {"items": [{"c": 17, "cal": 150, "cat": "Breakfast", "f": 0, "id": "b1", "name": "Nonfat Greek yogurt + berries", "p": 18, "serving": "¾ cup + ½ cup berries"}, {"c": 1, "cal": 175, "cat": "Breakfast", "f": 10, "id": "b2", "name": "2 eggs + 2 egg whites scrambled", "p": 19, "serving": "1 plate"}, {"c": 28, "cal": 215, "cat": "Breakfast", "f": 4, "id": "b3", "name": "Protein oats", "p": 17, "serving": "½ cup oats + ½ scoop whey"}, {"c": 27, "cal": 290, "cat": "Breakfast", "f": 11, "id": "b4", "name": "English muffin + egg + turkey sausage", "p": 20, "serving": "1 sandwich"}, {"c": 18, "cal": 300, "cat": "Lunch", "f": 12, "id": "l1", "name": "Turkey wrap", "p": 30, "serving": "low-carb tortilla, 3 oz turkey, cheese"}, {"c": 10, "cal": 320, "cat": "Lunch", "f": 14, "id": "l2", "name": "Chicken salad bowl", "p": 36, "serving": "4 oz chicken, greens, light dressing"}, {"c": 20, "cal": 250, "cat": "Lunch", "f": 9, "id": "l3", "name": "Tuna packet + crackers", "p": 20, "serving": "1 packet + 10 crackers"}, {"c": 1, "cal": 80, "cat": "Snacks", "f": 6, "id": "s1", "name": "String cheese", "p": 7, "serving": "1 stick"}, {"c": 25, "cal": 95, "cat": "Snacks", "f": 0, "id": "s2", "name": "Apple", "p": 0, "serving": "1 medium"}, {"c": 5, "cal": 90, "cat": "Snacks", "f": 2, "id": "s4", "name": "Cottage cheese, low-fat", "p": 12, "serving": "½ cup"}, {"c": 5, "cal": 80, "cat": "Snacks", "f": 1, "id": "s5", "name": "Beef jerky", "p": 11, "serving": "1 oz"}, {"c": 6, "cal": 165, "cat": "Snacks", "f": 14, "id": "s6", "name": "Almonds", "p": 6, "serving": "1 oz (about 23)"}, {"c": 0, "cal": 70, "cat": "Snacks", "f": 5, "id": "s7", "name": "Hard-boiled egg", "p": 6, "serving": "1 large"}, {"c": 10, "cal": 130, "cat": "Snacks", "f": 8, "id": "s8", "name": "Rice cake + peanut butter", "p": 4, "serving": "1 cake + 1 tbsp"}, {"c": 0, "cal": 185, "cat": "Proteins", "f": 4, "id": "pr1", "name": "Grilled chicken breast", "p": 35, "serving": "4 oz cooked"}, {"c": 3, "cal": 90, "cat": "Proteins", "f": 1, "id": "pr2", "name": "Deli turkey", "p": 16, "serving": "3 oz"}, {"c": 27, "cal": 105, "cat": "Sides & Extras", "f": 0, "id": "x1", "name": "Banana", "p": 1, "serving": "1 medium"}, {"c": 4, "cal": 80, "cat": "Sides & Extras", "f": 7, "id": "x2", "name": "Avocado", "p": 1, "serving": "⅓ medium"}, {"c": 5, "cal": 35, "cat": "Drinks", "f": 2, "id": "dr1", "name": "Coffee creamer", "p": 0, "serving": "1 tbsp"}, {"c": 6, "cal": 120, "cat": "Drinks", "f": 4.5, "id": "dr2", "name": "Fairlife milk, 2%", "p": 13, "serving": "1 cup"}, {"c": 14, "cal": 330, "cat": "Dinners", "f": 15, "id": "d1", "makes": 6, "name": "Sheet-pan chicken fajitas (example)", "p": 34, "serving": "1 serving, no tortilla"}, {"c": 4, "cal": 125, "cat": "Shakes & Coffee", "f": 1.5, "id": "sc1", "name": "Protein coffee (ON Vanilla Ice Cream)", "p": 24, "serving": "coffee + 1 scoop"}, {"c": 4, "cal": 120, "cat": "Shakes & Coffee", "f": 1.5, "id": "s3", "name": "ON Gold Standard whey + water", "p": 24, "serving": "1 scoop"}, {"c": 10, "cal": 240, "cat": "Shakes & Coffee", "f": 6, "id": "sc2", "name": "ON whey + Fairlife 2% milk", "p": 37, "serving": "1 scoop + 1 cup"}, {"c": 5, "cal": 160, "cat": "Shakes & Coffee", "f": 3, "id": "sc3", "name": "Premier Protein shake", "p": 30, "serving": "1 bottle (11 oz)"}, {"c": 8, "cal": 170, "cat": "Shakes & Coffee", "f": 4.5, "id": "sc4", "name": "Fairlife Core Power (26g)", "p": 26, "serving": "1 bottle"}, {"id": "pk1", "name": "Banana oat protein pancakes", "serving": "1 batch (¼ c oats, ½ c cottage cheese, ½ c egg whites, ½ banana)", "cat": "Breakfast", "cal": 290, "p": 29, "c": 32, "f": 4}, {"id": "pk2", "name": "Protein pancakes + 1 Tbsp PB", "serving": "1 batch + 1 Tbsp Jif Natural", "cat": "Breakfast", "cal": 385, "p": 33, "c": 36, "f": 12}, {"id": "pb1", "name": "Jif Natural peanut butter", "serving": "1 Tbsp", "cat": "Sides & Extras", "cal": 95, "p": 3.5, "c": 4, "f": 8}, {"id": "x3", "name": "Baked potato (plain)", "serving": "1 medium russet (~6 oz)", "cat": "Sides & Extras", "cal": 160, "p": 4, "c": 37, "f": 0}]}};</script>
-</head><body>
-
+<title>Macro Planner</title>
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAp6ElEQVR42u2deXDd13Xfz7n3/ra3PyzEQhBcwEWkRIoURYUUF4kSqSVW7Di1EydpXE/adDJKMpOM66TTpHaS8TT2JGnTbM4kTcZN2plO6qZ1bNniKokSqJWkSEpcQYIESGLHew9v+233nv7xAyGIwHsAKLxHEH5nOBwQBB4efr/P73zPOffce3BVezvUrGbTGatdgprV4KhZDY6a1eCoWQ2OmtXgqFkNjprV4KhZDY6a1eCoWQ2OmtWsBkfNanDUrAZHzWpw1KwGR81qcNSsBkfNanDUrAZHzWpw1KxmNThqVoOjZjU4alYBE7VLMGEIwPCjp4WAxj8gArj9jxocPwoW3PLxu04ECESQVw4RIAAAcMaCD3TGEVBg8G8kIKKP0KnBsRhQICAARADGGABoQiAyANKEYMgUkMH4F+uW68gJQJI6nx2WRIroWiHtKZXybE9JRcQZ05HpjDNkAKQWLyhi0QOBgJwxoWlCCMG4EIJzznDcAjVBRF9RXNN/eeXWuKZ7RAjgKQkAimDUK3pK3ihmbxTHrhcyV/Kpa/nMTTtb9B0GaHBhMI6Aapy/GhwL2BRRIAq6puuapmuaEOK2RiCNywhNDiaQSBH5SqW8oiTpEyEAAgIAIsSEjoCtZnRH3VJE9JVKe3Z3Pn12bPB0ZvDc2FBvccxXyuTC5AIB1IRi1eBYQH6CSHBuGaaua4amc85xPEQgGr9hVD4g5cg4MgLCSZ/3iQDI9WXwCghocrE50bQt2SqBRpzCyXT/yXT/W6M3L2aHCSDENY1xAlL3OSSLAQ6lFGPM0HXLNA3dEJxP8DAvfj4AJdCg4F+SKO97BC4AhoS2v2nl880do679TurW0cFrx4avDzkFg4sQF3Tbk9XguCeuQoTDlmVamhAIqEgppaqQ9CLiBChZzyUggWz/kpX7l6y8XsgcGex+qb/rg7FBnXGLa3B/IsKT8fh9GlgIziOhUDwWC5kWY+yT+AkEUAAG48/XLTcYV7e9xexBYYgAUJS+o2RcM7bXL32+eXV7KN5v527ZOV8pg4saHNUQEc5YNBROxGKWbkyuWHwST3DXcEw2hsgQJaiC9Dji5kTzp1vWrgonrxcyN4pjAGAwoe6fjOZ+giOILaLhSDwWs0xzHssL8wXH7Vf7yJEQwMb4khda1qwIJa4V0r3FjMkFQ6QaHPMYXgBAyLKSsXjINOfFW0wLx3O34YBPxseEI0GAovQZ4iPJ5mebVhlcvJ8eKErf4veBC7kP4FBEgrFENBYLR4LYohIBpgIwGX+hfoXFNQREBElEAOr2IgtNyljmiggA5KVnMPFk4/LHkq2X86kr+dTCdyELHQ4iCplmMp4wNG1eAv6gMMoQERng+O0mpRSAxtjuWCsA5aVHAHHNEIyFuWYJTWOMIxKBJBp/4ucICkNUAHnpLQvFfqJljc74iXS/q6S5gKMQXLBHTRIRIsYj0XAo9FER6xMAAUSKSCoppfJ8X5HyPR8QpJRSqSBWCHGBAJIoIvRloZiv1OpIsl4PdYQTzWak1YrGhK4h90g6SnpKTWjHnBwhQ0xo5lujN7967rUr+VRSM31SNThm580Yk1IKIRKxuK5pd123CJhQSvlSOq7reZ4vfSmlul08n7it4/5jvBpBAKiIXJIIIEkRgEAW4lqTEW4PxddH63+sbunaSH1SNwmgKD1PKbwtH7PiHkCSigkj5RW/fqHzpb7LCd0EgoXmQhYWHAgIQGm7WBeNNiXq6K4CzwkmPN+zHddxHV9KpdR43arsLcSPvczEZzCohXtKuqSkUhbXWszIo8mWJxrbt8SbG42QT1SQriLgs0ZEEumMm4x/u+fMH15602BcY3xB1coWUMzBEBWQ7Xtfefy5aCR6NTNscW1O6SoiMsZ8388Xi5lcNlcoOK6riHCSzUHXPvozfscEcoNzi2sMIeM5Z8YGDwxcPThw9UohHRV6mxULC81VUpKajRdhiAqUo+TO+raVoeTx0RsF6emMUw2OqVdKKpX33G88/bkXtz+7Y8myd/qv9xcy5uz4CG6847pj+fxYLms7Dk1iYj4jodvJi0BmcaEznvXdU+mB7/d3nc4MSqKV4WRcM1wlJdGMiCAgIualtyXRvCXZfGiwO0hqFsjS/4KAgyG6UkpS39z3+S9u3jWcSyfM0MaGpUd7LznS54zRLLDIZMey+bzne5Vgooxr4cgsLjiyK/nUwcGrbwz3csZWR+qimu5ISbNIaxhi1ndXhhNbEy3Hhnsynm3wBeE/7j0cDNGTMqIb//DZX/rUmofTdl5j3Pb99liyI9H4vStnNc5LXV3GmOf7mbGxbD4npawOE9NSAgAGFxYXA07h0GD3G8O9TWZ4XbSeIbpKzuhCOGJR+m2h6I83rz6ZGbhRHDPnKKmLEI5ATXxS//CTv7SjfU2qmBOMB58v+u7qxJI6M3Tk+kVTaDRVsImyhXwmO+ZL/15hMdWRBMuwA07++/2XrxUyayP1S0OxovLpdvdQmUvhKD+uGfuXrDw8dG3EKRj8HuvLvYQj6MTJe+43933+U2sfniDjo4sl/Uealo3ahZODvZbQJ64UQ2a7biqTKdr2QsBialCiM64zfiYz+IP+LoPxLYlmBujNFKgyREfJmGY8HG86PNhdkJ52T+PTewkHQyz63jef/twXN+9K2/nJZEwEFK4vn2pf+8HwrUupwZDQABEQM7lsJptVpIJW4YVYwQMIWsI8JQ8NdZ8bG36srrXRCBWkNws+/OWhxNZky5HBa7aSomzItTjhEIwPFsZ+8/HnX9z+TCo/Ng0ZAAgQFBh2LV39Tv/1gWJOAI6kU0XbZowtKIdRAhFiiCGuX8yNHBrqXhlObIg12EpC2VU9hljwvY5IcnUk+f/6Lmq3d0j8qMAhGB8p5H5h0+Nfe+IzWbvASv/+iOiTimnGtpYV/3zpdP/oiJTq3l2uu0TE4iLru9/vvyyJdtQtlaTUpPrstHzkpbcuWl+nWwcHrlpc0I8IHBxZzrU3NrX91Qv/Kmj2K3OZgs0mIdN6+dLp750/CbdbJe4vIwANmcb4kcHutGc/07SKgORMfNjSf6yutc/OnUj1hYVe/eJ6teFAQJ+UIbS//fQvtkYTtueWiRsCbkK68Xuvfvc/db4kGOeM3ad7Q4IoJCL0E+n+M5nBPQ3tYaG7qmyIiugptbOh7c3Rm7fsXPWLH9WGI3Abf/DU555Z/dDYtEHoJJ+BiGHd+K0j3/nWe68krTDe3nVy/1oQpZ7PDr+f7t/ftCosNE+pUv4jWB8OCW1TfMkPB7okKQa4aOEQjKXs/L9Y/+h/2P1CulieDCCCkG781pHv/N2p15dE4nJBLmrfhSmgiKZfK2TeS/Xtb1plcl5GXwJxWRlOGowfGugOTcrnFxUcCOhKvykS/6tP/UKw/FhGcZVSiXDs9179v99675UlkbivJCwiU0Qhrl0rpM9khj7bum68S6BMwi+9LcnmD8eGLudHqxmcVq9OEFQ1fmf3C0tjdbZfLt2XSiWs8N+fOvbXJ481hqOLjIzAfFJJzXo3devrF94wOYeZVuoV0W+u3REXhk8KF5nnuC0oW7/y+PMZuyBKB6G+kkkr8t2Lp37th/8zohsACIvUFFCIa2+P3nSU3Ne0qkx9DBEdJdtCMb264lINOBDQVypuWP/1uZ+NGqYsHYIpUiHdvJoa/KXv//cAqcV9DAYBhYX2zuitVeHExviSMnwElfWHYo3vpfpvFMf0qmQu1ZAVznDMKf7i5l1rG5cWXKfU709ADJlU6suH/nGkkNO5ULT4D0ghApPzr1/ovJJPhXm5JmpJZDLx4qqtiyfmQEDb99pidT/30PaCU+SlBUUpihrWH3S+1Nl7OW6GFk16MqPz0BlPecWvnjvml12Z44hZ391Rv/Tx+ras51ShGFhxOBjDoud96eGdrfGk4/ullq0lqbgZOtJ97m9OHquzwosyCC3jEmLCeGv0xt9eOx3XjJmeCvzS8k06q0bOUtmYAwEd318aS/7hvp8mUoDT9zQQkGA86zq//IO/z9hFbdZ9DEHTKM7O5uc3mstPnH13NAGZXJxI929LtraFYq6S075hRHSUvzZS/8HY8MXssFnhtLayW785w7ztfH7DtvpQJFXMl0pSpKJYyPrTd7734eDNxnBstm4DUUpp2/Ys34ymabquf8L9L57nua47y683TXOWTQUEwBEL0vvTK+/+9ZYfnyG6J/rptvWvDF2reI5Z4WjDX56o/5cPbS96DmclM5SIbnww0Ps3p44lZy0ojLFCPr/5kUd+56tfLb90B7d3YP/Fn/3ZkUOHIrGYknejWYyxXC63c9euL3/lKzP+xMB+76tfPXv2rGVZsyFSEkWFcXy497t9lz6/dEPaK3Jk06Yted/dWd+2s35Z50hPWOiVC9tFRd1GyrZ/cfOu1nhdqpArXdtAQPxG5w/yrhs3rFnGoYjo+34ymdzx+OOzfD+Dg4MHXn75rtWFMea67k9+9rOz/4mJRML3/dnriyJlCe1bV0/url8W08wy9S6G7Kfb1r8+3FPRoLSCAamvVMwwP7N2s+d7pRowJKmIYb5+/eKR7nMxw5xThhLwIaX0PE+WNd/3lVI7Hn+8ubnZdd27iz88z6uvr9+1Z49SKvi55X9i8Pdcd8oYTPQUMv/75oWw0FSJqxE4j8eSrWsidUXp430HB0OWd53tbasfXNJW8FyGrJTTUER/ffIY0Qz9t6X44LMwIQQALFmyZNtjjxWLxbtoLmSMFYvFTZs2rVixAhGD8ypntLugUJGKCO07N8/fKmbLpCSSVEI3n21a5ShZ6touZDjAV/In1mzSBC/lVNVtt3Hs+sXoHN3GnC+6UgCwb/9+eVcBByK6rrv36acB4O5eYfbOQ2fiVjH7nRmcB7OlfHrJijDXKnfdKgJHEIq2J+r3tK8ruk6prj4iYMj+6cJJr0TmNq/lFgYATzz5ZENDg+d5c/1xUspoNLr3qacmXqqCHJMyuTg4cDXj2bykxwVbeh3h5KPJ1hmblhcWHIxhwXOeaF/Xlqi3SxS+CCik6xeGbh248kHUsKSiSsOhlFra1vbI1q3FYhHncoMZY0XbXr9+/boHHqDKw0EAFtcu5UaODF6LCr2UYyAgnYlnm1ZJRQj3DxyBbWtdQURY0s+TLrTvXT6dKhY0xqowlWBCWXzfn9OjhoiObe958knOufL9KtRMg7b1l/q7XJKlbjxD5ih/Q7QhqukVUpb5hwMBXd9vjsQfb1vt+G4pTRGMZe3iD7vOmkKTVVlFCZ74vU89lUgkPM+bw60iskzz6X37AlKq8FaDbqCT6f6ubMrkGpVQFkf6HZHkg7HGYmWUpQJwINq+99CStrZ4XanFFEXK0vQzAze6RgdMTSOYfzrsYtFxnDvgIKKVq1Ztevjh2ecsjDHbtjtWr3548+apAUexUJh9wXRuVSJkOc/pHL1hcl4qLFVAJhePJVs9pSqhLPMPR5CnPNLcLkqvuSsCzsWRa+eLnsvnG/kgORpNpc6fOzehJhNxJQA8vW+f67qzfNSQsWKxuGv3bsMwgr3ak0Xq3LlzY5kMzPfphjC+3sSODffY0i/VVxw0ymyML9EZr0TjC6uES9S52NqyXClZqvalMZa1C69dv2gIvXKa8t67706rLE/t2xeLxfzZZaSklBDi6f37pzpIADh54gQXFakyKyKLa+fGhq7kU0aJBbagQ2xNpK7BCHlK4gKHAwFdKZuj8QfqWxx/+oyRQBlC604PX0sPG0JUQlMAIBIOv3/qlOd5k4UgUJZ169ZtePDB2SgLIjqO097evu2xx+7QFETM53IffvhhNBqFuzyEcmZlyfruB5khg02vLMFQmEYjtDZS71SgHDDfcCC6vrcqsaQxHHXl9JG2VKAJ0dl7OWMHecr8Bz0AEI1Gr1+/3tXVdYeyBItwe596ynGcGeEICqPbd+yIRqNqUndj8IIXLly4dfOmEKJC81UIiAG8MdKroGSyGvQKbYg1+BUIO+b53jAET8kHGprLBByIqBSd6u9hyCrXB4iMFfL5t44fD6Thjv/dt39/OByeTa0TEQNNmUxAAMc7b78dxLyVgoNIZ/xSbiTt2hxZiZwFJdHaSB3H+S8HVOTBXR6vL+PhBGLeta+khnQuKlT6Cm6eYZqvvvJKAMpHvppzAHjooYfWrltnl1WWoGTe3Ny8c+fOOzQl+LjzjTdCoVBFq2Ea40NOod/O66U3gEmlWsyIWYGW23mGQxEJxjuSjUqpaaNRAtK46Mumb2ZTGucVrX0lEol33323UCjccSi27/tC057cu9e27TI5S6ApW7dta2hsnKwpRBT818kTJ2LxeOU8BwBwxLzvXcmnRIlzvRHRI9ViRmLa/G9pmU84ENBTqs4KL4vVeXL61Woi0ji/mU2N2cVK7zyIx+O9PT1nTp++I+wI3ti+/fsN0yz/tEkp9+3bNzVqAYAPzpzp7e2NRCIVroehJHWtkOE4/T5hBPBJxTVjmRXzSM1vTDrPniOYshbRzDIVDmTs0uhgRRfbgofMtCzHtt94/fXgU3eIwpYtWzpWr7Ztu5Sy+L5fX1+/+4knYLr1lNdff922bV3XK4oGAXHEq/mUpJLxJhEZjFsLXFYQ0ZP+8lhd3LLKBM8IOFzIqtLLLvPmkznXdf3Nzk4iYpxPfp9SSsM0d+/ZUyqhZYwVC4WHN29ub28PdOSOfPh4Z6euaVWopTPEUdf2S5/xHez36QgnJc3zCtz8xxxR3TJEyc05DNGX/rnhPo3xCi/EAgKYlnX+/Pmenp7gwOs7vmD/s89qJc5WR0TX84I1+slJTRB89Pb0nPvwQ9OyKk1GkLD0FjOjbrHM4XEMMa4ZRAs+W3GVX/5dsrn07H/CaF8IMToyMjWhDTzBtm3blq9Y4TjOVIGTUsZisakNHAFJb7zxxsjIiKZp1dl8pmbRz+xWYOzh/MoK+KTWN7RwVrL7iyNmHXuwkOXVOQiQCBl7ZUpCGyhLOBzeuWvXVGUJkpENGzasXbduqqYAwNHDh3llxgJN+yzlpTfsFHjJM16CUkdS4DwH+PObrQARJYwQlhhARECcsaxjD+QzWmmA5veZsyzrnbfeSqdS00552v/MM1NjDsaY6zhP7N0btAhNdvKMseHh4XfeeccKhaowozQ4PjvruYNOQcOSOBJRXDMWevkcAGacK8MQBVbpbE0iMgzj5o0bxzs778hIAyZ27NjR1tZ2h7JIKS3LGm/gmFJb63z99b5bt3Rdh2rt82aIYqaBXz7dD6uyOLsHonqGqIgOHjgwNeRUSsUTie07dhQLhQn/ETRwrF6zZuOmTTBlsQ0ADh44MD7kvopG83HZ7z0cC81IypBlHe/szGaznH9My4KP9z/zDH1cU2zb3rVnj67rkxs4Ak1Jp9NvvvlmdTTlntvih0MR6YbR09Pz9ltvTassO3fvbmlpmdjspJTSNG1fCU158/jxm729hmFQDY67khWcMQ6o8qkswd64UsrS2Ni47bHHgiWY8QaO5csf3bYNpiuMHnz55eofKROc8b0YZKX8TmhFZAgtohvVvMRKqZBlvXHsWKFQuENZJlrSgw+CJPbxnTvDkcgdmsI5z+VynZ2dlmVVU1OISGdixg3TCz0gVQQa42eHbvpy+t7/oOcxGQqviDeUWpmrVM5imt3d3UHj4DQ5y86ddXV1vu8Hn3nm2Wen1ZS333qr5/p1wzCoWmTj+LmDZnuo5Lpa0G16PjvsKbmgy+cAIGd6qojIr7pgM8Y8zzs0RVmC4kd7e/uatWsdx/F9v6Wl5ce2b59eUw4cmOve6Pm5pKRm3Jki6f5oMFZlHKAi4oyvq2/2SzR8VE5ZLNM89tprjuNMVRbG2KPbtvmeZ9v2w5s319XV3dHAwTkvFgpvHDtWZU0J2jWWhWLJsicy3AdwEJEutCupodFCTuMlm+URsTEUqXKxQyllWlZXV9epkyfvUJbAtu/YwYXwfX/X7t0wXVPgiffe67561TRNqm5AKokSmqmzkp2qCOgreSE7PO/9MWzeWfOUdKUs9boMgZRcU98kqj5glzHmOE6gLJMvdOAhtmzZkkwmDdN8fNcumK6b/OCBA+7He9mrEnOgVGpVOFn+xksiW/kLemsCAQnORwu5nrERrVRPNoKv1NJIIqwbkqruPEzz1Vdf9TxPTNpsEoQdzS0ty1esWNraum7duslwBJriOM6x114zTbP6tS9EXGZFSz1IBCAYz3hOb2Fs3per5r37HF0pr2dGGPISbKAr/bZYXXMk7kmJVTy9OoDj0sWLZ8+cgY93aQQfP7Rx46aHHxZCTN3Z9v7771++fLnKAQcAKFAW19ZE6so0T2nIBp18xnPmfcVq3jc1gSTVnRoutTA7ftS1aa1MNFYzmw2Mc14oFA4fPDj16QzCjj1PPjk1kAKAQwcOOI5T5SFRCOApVa+bS62oWyqPJRKIfXYu57tsga/KBqWOS6MDsvSkXUXEudi4ZKlXer9kRZ3H0aNHpZRTuzT27t373PPP35HECiF833/1lVdMw6h+YddVckUoUaebfondjkEXRFc+rWjBb2oiIo2LrtRAupgvFUMxBCn9XctWhzW90me2TJPQWtb5c+fOnzs3uXEweCiTdXUNDQ2TA45Abj44e/bihQtm1TUFAaWiHfVtWunp9ggoSV3MDjOc/zFW8w0HkMH5jUyqa3TQEFqprRa2761vaG2NJR3pI1RbWXK53OFDh2DKTjgimvYNHzp4MKi7VzkUVaAMLh6JN5UqfQatQCnXPpcd1jm/D3pIOWMFzznV3yP49C3ECOhJmQyFty/tsEuf7lI552EYxpHDh5VS7OP3e+op2IwxKeXRI0dMw6i62wBHyo5IYk20zi6xHBFsSujOp/uKOb0Cs6vnH47gGLgTfdeVKt0Wi0AAz6zawJEB3QNl+fDs2cuXLk3bkj75KxHxwvnz58+dq76mMGSO9HfWLYtrZpljwTTOPxgbKkqPVeKolfm/+kSm0M4M9o4UsnrJsANt19nWunJZvM72q60sgvPM2NjRw4dhulLpZDgA4PChQ9lsVggB1TUFpHOxp2GZV3YHkCR1It3HEe+Pw1sIyBTienrk7ZtXTW36g+iDYzwawrEnlz9QrL6yEOm6fvjwYbi9r7pUdEJERw8fNnS92m4D0JbeA9H6Mud9EYDOeG9h7ES63yoR3i04OALx9pR891Y3K71zCRGUkj/1wCM6F3QvlOX0++93X71aSlkCTem6fPns2bPVbwpERFvK55o6oqXHrxCRycWF7PCIU9SwIlO9KgKHVGQJ/VjP5XQhV2orPUOWc51HWlfsbl+bdezKndE8rWmalk6njx45UkpZgk8eOXw4k8lUWVMQwFV+mxV9vqkj73ulrgwBENCrwz0AVKH96BW5JQQU0rRzQzeP3+gqs4ZCRAYXP/XAI5JUtathREKIoFQ67VpaIDeHDx3SS+yXrGgoWpDenoblbaGYW2I5jQAMxm8Usq8NXQ9VRlOgkg3GSAQ/vPIBQcnFec4w5xSfW71xY1Nbzq1qcZqUsizr5MmTvb29d+xcmtCU7u7u0++/X31NkaSiwviZtvWlMlgIzurkonOkd9StlKZUEA5FFNaNI93nrqeGTU0r4ffQVypmWv968253jqcKT/ieMnMtyjxPRKRp2sjIyGuvvDJ1REYwguOVo0dTo6OaplXiDZSMgpFlffe5po4gFC15fDGgo/yX+rsqlKdUFg4C0jkfzI39sOusqRmlyuScsaxd/PSazZtaluVcZ06RBxEFoy00TbtjloWu68Hny98ezvnBgwcZY8HXT/52xtihgweFVm6WJxEF33jHtwdDPIK/58qHJBUR+s+3P1TmdEBFFBL6mczQ6cxA6D6d1BQ0mv/ThZO/sGmHNl7wwKkXWALFQ5GvPLr/Sy99G+dIRiqVevP48alDtYLOv76+vjJ8KKVCodDJ99478PLL8Xh8oi8w2LyUGh09feqUZVml9qcEvufmjRtvHj8e/LipX5NOp+fEh0A24hZ/pePRB2ONKbfIS4aiJBC/23fJVdLionIDPnBVe3vl+OCMpYr5P3nmZ39u0/ZMsTB1Zz1yTr5fGB7Vs/aX3z/wUn9XmYLg1IRPlR0AqOv6jM6DiIrF4rT/ZVlW+Y6CGecBzn4A4HhhUPrLrNj/2PYZgwkJVGoZ1mCiKzf6xff+ueLVwsrGfQQ6F98+0/lT67d+jAwi5ByInNG0PTzqFW3QjBc7Hu0cueGS5IA0u1fnnJc5lavUQtodN7jUK6hZtNEHEyfL11jnksHKF1dtrdOtdOlJK5LI4uIfb54f85ykblV0glFl58oSkM7FjbHUmrqmh1vai57LAIAx5NwvFPM3++3hUVLEhXCVv9SMGZwfGugOCX32QRaVtk/4ClV7A0Ecmvbsn2hZ96sdj2Y8p4ygmFy7kk/958tvc3b/T6QGQIb45+8dzTk2ZwwFJ9/P3+jLXuv18gUUIhieGFydLyx7cG/jirHSz82itCD1WGrGvrzmx2zpl7npishk/NvXzww5eVGxDLZ6cIyPjR288b1Lp6OGle0fGrvS44ymATBQlkkeHnylvrZhd4sZdVTJUQGLzwjBV+p3N+xpNiNO6V1riijE9QvZkZcHrsRmnmq+4GVlopyHAF2pwaeMRsjkCAinW+5CQI9UgxFaFU58r++yxjn9CJAhkKVd+1c6tn1h2YZ0WZepACwhvnHp+LmxIYvf/7PsJ8wQ4no2pUvY27IqLz1WcjQV2tJbH2uQREcGuyPCIKDFTcaIW9zbuPxrG/bkSg9YDeLQmGa8NtTzXy6/E9Wq1M1aJTgUkcnF+2MDjyVa2kIxt3SFJ8jodtS1pT37ZLovxDW1SPngyPK+uznR/Meb9nFkZUcjgEBWkN6/O3sk77uCVenQrOrFfQzRkfIbl970lGTlT7hCtJX/uxv27GpoH3GLgrHFSAYWpFtvhP5k0/64MMtvkFekIpr+51feu5QdMblWtSb4KnkOGJ+IKa7mUzoTTzYuz8uS+ywQQBEpoCca299P918rZBaZ/+CIRelHhfHnm59bEU4UpMvLCYqKa+ax4Z5vXjxeNUGpNhwAoIAMLk6k+x9JNK8IJezSe1sQURKFhb6/adV7qb5rhUx4sfDBkRWkHxX6t7Y8vznelPWdMmQQkMbEmG9/+czhbBUFpdqyMiEuPqmvnnst5RXLj61jiEXpR4T+l1ue35ZsTS2K4odAlvfdet36y83PPxxvSs/0SxGBwfnXL3R25UetKgrKPfAcgbiYTNyyc312/lMtqx1ZbnYCQ/SUMjn/bOu6Ubf49ujNsNDgvq1/BLnJ5kTzf3vkUyvCiazvirJk+KTqdOvb10//3bX36ypcKV8QcATiEuLamcxAVDMer2/L++UG5gb6QgD7lqxwlHwndYshaNX1rvPhnxEAUp69t3H5H2/cl9St8nFGQEZMGO+mbv32h69aXLsnKf09gCOQUktorw5dXxlKbkk0Z/1y02URkYA8UvuaVq0KJd4cvZXxnXt1ve7OYdgkXZK/2vHo19bv4Yw5yi9PhiQVFXpPYezfnvyBT7JqBz4vCDiCm84Qjo/e2JJsXhlOlB+4jYAImJfepviSJxuXX8iOXsqNmFxwxIUMCENkiGnPbjIjf7hx3xeWPZiTngJVvuctmCib9d3fOHOopzhmcXGvIvF7CAcIxgrSOzTYvTXR0haKOWqGTkGGWJBegx56oWW1wcSJdH9eehbXFqzDKEq/IL1Pt6z9o437How1pjybI5bfwaWIBGM56f7KqZdPZwZiWrWPuFkocATbcvLSfW2454Xm1THNnA0fnlIA8ERj+7Zk6y07eyk3yhErNK/7rpNVAkp59qpI4rfX7frVjm0asoL0xEzZliJiiCGh/frpQ2+O3qwz7kEQulDggPEWe5Hx7JOZgX1LVsY1Y0Y+guwmL732UOyF5jVtVvTc2HCfnROMaYzfw98Fb2Mx5jsG4/9m5ZbfX79nc6Ip4zkENGP7tCLSGAsJ7Wvnjr3c35XULZ/u8Qna9xgOmDi1oZg9MtS9Kd60PJQolM1fJlyIq6QktTXRsr9pZUzTu/PpQTePADrjWN1YhAFyZB7JMc8xuPhMy9qvbdjzmda1CqggPY5sxs3AkpTFtZzv/vqZQy/3d0XvqZp8hHtFe0jn5IpzvhvXjL/c8vzWRPOIWxSzK3lJUjoTYa7dtLP/5+aFg4NXL2VHGGKIa8FzXLnCEQNEREVkK9+WfpsV3dOw/GfaNjwYa3CVLEiP4ay6tXxSUaFnPOfFUz88ke6vXwA+Y2HBEfBRlF5MM/7gwb27G9rHPAcRZrMBnwBUgIjQ0q59dOjaD/q7TqT7s76jIbe4CPJkRfDJ4xIMjvEAUES2ko7yDSYeiNY/19TxXFPHslDMkX5B+ggwy204QT3jeiHz7z84ejozkNBNf8HMY1hAcEzEm47y/+MDu39+2UM53/VI8dld5QARgSwidFepy7nR46O9x4Z7z40NZX0XAQwmtGAwQjBw7PZhcFSag4kQJ/gWSeSTcpWURCbjq8LJnfXLdjcseyjWGNOMnO+5ykfEWfawERARJHXzrdGbv3H6UMqzI0KXtIAmdSwsOOD27Mis735+6fqvrNsR5tqMZeYpQkMMwWTCYMJW/pV86oPMUOdI76Xc6JCTz/meT0ogImIwIJ4jm8ofEXmkENBTUhJJUogY4qJOt1aGEtvr27YkmtZG6uOa4SlZlL4kNUsRmayGBuN/33PmT7reCUKlhRBnLGg4gkeWIaZce2N8ye9veOLh+JJR14ZZO+rx4B+IiBiiyYTOuCJKe06/nbuST10rZK7mU6Nusbc4pojy0sv5Lru9HwKD1WPGk7ollWoLxRKa2RFOtFmxNZG6pVY0qVkG4x6NM4GAc3pjBCBJJTRz2C38pwud3++7HNMMBrgA15wXIhwTRaSs70aE9msd276w7EFFNJtSQQlKAAEEMo0xjXGO6CklSY24RYY45BSGnAJHNqEwCijM9fZQzFcqqZsGE4KxwJd4SnqkiGiuTEx4NY2xCNdfHb7+zYvHu/KjSc2SpBZmnXfhwgEAHNEnlfXdJxuW/+baHWuj9WOeI4n4Xe3HD4IMAgAgBESEADWBTDA22aMHzsNVEgF9UoqCAzBwIhq9CwuSpphmpDz7L6689796PwxSKp8W7jiwBQ3HbYlhY56T0IwXOx793NIHTC6ynjtXlSmFC3z8kPyp1bZP3h8QpNMhrgvE14Z7/ujyW5eyIwnNBARFC3rtcKHDMeFCPKVy0n000fpix9btdUsZYJCDMFy47R1qHAvNYPx8duRvr516qa9LMGZxTdJ9MD/w/oBjwoXkpUsEj9e3fWn5pl31yyRRzncJgC8wRBRR0DNrce1Cdvjb188cGLiS892YZkxITA2O+U90ASDrOToXu+uXfb5tw876tqD3zp974jDvRkCKgCGEuCaQfTg29I83zx8auDrkFGKawREl3U9dSvcZHBMqowiyviOQ7axf9rm2Bx5LLk1qpqN8W/nB7anm2aYBEwBgMG5xYSt5NjP43b5LP+zvGvOciNA1xu8LHVkMcEwgQgCBrKwJ1z3btOrpJSs6wsmg9uUoX1GQlVTEmdzOfQgBdcZNLgjoRiHbOdL7Un/X6cyAq2RY6AKZWqiZ6mKGY0JoEKAofUfJiNC3JlqebVq5IdrYEUmaXPhKOUp6Sn7yXHRSuZ0QUDCmM64j90n1FscuZIdfG+p5bfj6iFvkyEJcYwj3l4gsQjhuh6sY3IyC9CRRVOgPxRq3JVs3xpesidQ1GqGgSOqTCspf6nbBYzxpLSEWEy+OCByZhkwwxpFJpVKe3Z1PfzA2dCLddzLdP+wUACDEtaD5WdFi2GKzSOC4w5FIoqL0PSV1xhuN0NpI/fpYw5pIXasZaTEjcc3QmRA4Hr360x20ggCcMQQgAE8pRSrtOUNOvs/OdeVTF7Mj57PDfXauID0OzOJCY2wiSVk0ttjg+DglSECeko6SvlIc0eRaXDParKjFtY5wIq6ZrpJrI3VBqyZO8kM+qfPZ4WDJ7UJ2xFF+T2Es4zl56fqkGKDBhM4YQwZAi4yJxQ/HZB+At0FRRJKUq1RQngqcv8YYm+4UMk9JmuRCdMaD9dtg+X5eukMWuAlY7HY7kBy/kQKZJjiM18VxcmwxhSp9cvARaI+a9FKL3gT8iBl9bDGFZvraH2ljULOa1eCoWQ2OmtXgqFkNjprV4KhZDY6a1eCoWQ2OmtXgqFkNjprVrAZHzWpw1KwGR81qcNSsBkfNanDUrAZHzWpw1KwGR81qcNSsZjU4alaDo2Y1OGo2//b/AWBCw3zaOTBYAAAAAElFTkSuQmCC">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Figtree:wght@400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Layout: one-column phone app; dark budget block, pink-outlined dinner card, meal slots; fixed bottom tabs. Bold gym-poster type. */
 :root{
-  --bg:#FBF7F8; --surface:#FFFFFF; --sunk:#F4E9EC; --line:#EBD8DD;
-  --ink:#211C1D; --muted:#6E5F63; --accent:#E25C7B; --accent-ink:#FFFFFF; --accent-soft:#FCE4EA;
-  --pro:#D2456A; --carb:#C4862A; --fat:#56709A; --over:#C23B2A;
-  --hero-bg:#221E1E; --hero-ink:#FFFFFF;
-  --display:"Montserrat", "Avenir Next", system-ui, sans-serif;
-  --body:"Figtree", -apple-system, "Segoe UI", system-ui, sans-serif;
-  --r:10px;
+  --pink:#E25C7B; --pink2:#F2849E; --ink:#221E1E;
+  --bg:#F5F0F1; --card:#FFFFFF; --text:#221E1E; --muted:#7B6F72; --line:#EBE1E3; --chip:#F1E8EA;
+  --good:#22A866; --over:#D93A4E; --block:#221E1E; --blockText:#FFFFFF; --blockMuted:#B9ADB0; --blockLine:#3A3233;
+  --shadow:0 1px 0 rgba(34,30,30,.04),0 8px 24px rgba(34,30,30,.07);
+  --head:'Montserrat',-apple-system,system-ui,sans-serif;
+  --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#141112; --surface:#1F1A1C; --sunk:#2A2326; --line:#3A3034;
-  --ink:#F6EEF0; --muted:#B4A4A9; --accent:#F2849E; --accent-ink:#1A1012; --accent-soft:#38212A;
-  --pro:#F28BA6; --carb:#E8B566; --fat:#9DB2D8; --over:#FF8A75;
-  --hero-bg:#0B0909; --hero-ink:#FFFFFF; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#141112; --surface:#1F1A1C; --sunk:#2A2326; --line:#3A3034;
-  --ink:#F6EEF0; --muted:#B4A4A9; --accent:#F2849E; --accent-ink:#1A1012; --accent-soft:#38212A;
-  --pro:#F28BA6; --carb:#E8B566; --fat:#9DB2D8; --over:#FF8A75;
-  --hero-bg:#0B0909; --hero-ink:#FFFFFF; color-scheme:dark}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
-.wrap{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:14px 110px;display:flex;flex-direction:column;gap:16px}
-h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
-h1{font-size:1.5rem;font-weight:900;text-transform:uppercase;letter-spacing:.01em;line-height:1.05}
-h2{font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
-.num{font-variant-numeric:tabular-nums}
-.muted{color:var(--muted)}
-.eyebrow{font-family:var(--display);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:700}
-button{font:inherit;color:inherit;cursor:pointer}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
-.daynav{display:flex;align-items:center;gap:4px}
-.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:999px;width:36px;height:36px;display:grid;place-items:center;font-size:1rem}
-.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:.85rem;font-weight:600;white-space:nowrap}
-.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.btn{border:0;border-radius:8px;padding:11px 16px;font-family:var(--display);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;background:var(--accent);color:var(--accent-ink)}
-.btn.ghost{background:var(--sunk);color:var(--ink)}
-.btn.small{padding:8px 12px;font-size:.75rem;border-radius:7px}
-.btn.danger{background:transparent;color:var(--over);border:1px solid var(--over)}
-.link{background:none;border:0;padding:0;color:var(--accent);font-weight:700}
+[data-theme="dark"]{
+  --bg:#110F0F; --card:#1C1919; --text:#F5EEF0; --muted:#A3979A; --line:#2E2829; --chip:#2A2425;
+  --block:#221E1E; --blockLine:#3A3233; --shadow:0 0 0 1px #2A2425;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg)}
+body{font-family:var(--body);color:var(--text);font-size:16px;line-height:1.4;touch-action:manipulation;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased}
+body.noscroll{overflow:hidden}
+h1,h2,h3{font-family:var(--head);font-weight:800;text-transform:uppercase;letter-spacing:.03em;margin:0}
+h1{font-size:26px;font-weight:900}
+h2{font-size:17px}
+h3{font-size:13px;color:var(--muted);letter-spacing:.08em}
+button{font-family:inherit;font-size:16px;color:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
+.screen{display:none;max-width:640px;margin:0 auto;
+  padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 14px) calc(100px + env(safe-area-inset-bottom)) calc(env(safe-area-inset-left) + 14px)}
+.screen.active{display:block}
+.card{background:var(--card);border-radius:20px;padding:16px;margin:12px 0;box-shadow:var(--shadow)}
+.block{background:var(--block);color:var(--blockText);border:1px solid var(--blockLine)}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.card-h .sub{font-size:13px;color:var(--muted);font-weight:600}
+.hint{font-size:14px;color:var(--muted);margin:10px 0 0}
+.tag{display:inline-block;font:800 11px var(--head);text-transform:uppercase;letter-spacing:.08em;padding:5px 9px;border-radius:999px;background:var(--pink);color:#fff}
+.tag.ghost{background:var(--chip);color:var(--muted)}
+.btn{min-height:48px;padding:0 18px;border-radius:14px;border:0;background:var(--chip);color:var(--text);font:800 14px var(--head);text-transform:uppercase;letter-spacing:.05em;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.primary{background:var(--pink);color:#fff}
+.btn.dark{background:var(--ink);color:#fff}
+.btn.outline{background:transparent;border:2px solid var(--pink);color:var(--pink)}
+.btn.danger{background:transparent;color:var(--over);border:2px solid var(--over)}
+.btn.sm{min-height:40px;padding:0 14px;font-size:12px;border-radius:12px}
+.btn.wide{width:100%}
+.btn:active,.mixbtn:active{transform:scale(.97)}
+.btn svg{width:16px;height:16px}
 
-/* budget */
-.budget{background:var(--hero-bg);color:var(--hero-ink);border-radius:var(--r);padding:18px 16px;display:flex;flex-direction:column;gap:14px;--pro:#F28BA6;--carb:#E8B566;--fat:#9DB2D8;--over:#FF8A75;--muted:#BBAAAF;--sunk:rgb(255 255 255 / .13);--accent:#F2849E}
-.calrow{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.big{font-family:var(--display);font-size:2.6rem;font-weight:900;line-height:1;color:var(--accent)}
-.bars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.bar{display:flex;flex-direction:column;gap:5px;min-width:0}
-.bar .lbl{display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;gap:4px}
-.track{height:8px;border-radius:99px;background:var(--sunk);overflow:hidden;position:relative}
-.fill{height:100%;border-radius:99px;transition:width .25s}
-.fill.dn{position:absolute;left:0;top:0;opacity:.45}
-.legend{display:flex;gap:14px;font-size:.75rem;color:var(--muted);flex-wrap:wrap}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--muted);vertical-align:-1px;margin-right:4px}
-.legend i.soft{opacity:.45}
-.over{color:var(--over)!important}
-.p{color:var(--pro)} .c{color:var(--carb)} .f{color:var(--fat)}
+.topbar{display:flex;flex-direction:column;gap:8px;margin-bottom:4px}
+.challenge{font:800 12px var(--head);text-transform:uppercase;letter-spacing:.1em;color:var(--pink)}
+.daynav{display:flex;align-items:center;gap:8px}
+.navbtn{width:48px;height:48px;border-radius:14px;border:0;background:var(--card);box-shadow:var(--shadow);font-size:24px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.daylabel{flex:1;text-align:center}
+.daylabel .dl-main{font:900 22px var(--head);text-transform:uppercase;letter-spacing:.02em}
+.daylabel .dl-sub{font-size:13px;color:var(--muted);font-weight:600}
+.todaylink{align-self:center}
 
-/* dinner */
-.dinner{background:var(--accent-soft);border:2px solid var(--accent);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px}
-.dinner .head{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.dname{font-family:var(--display);font-size:1.2rem;font-weight:800;line-height:1.2}
-.stepper{display:flex;align-items:center;gap:8px}
-.stepper button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:700;font-size:1.1rem}
-.stepper .val{min-width:4.5ch;text-align:center;font-weight:700}
-.fit{background:var(--surface);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:.9rem}
-.fit strong{font-family:var(--display);font-size:1.05rem;font-weight:800;color:var(--accent)}
+.budget .calrow{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:14px}
+.bignum{font:900 44px/1 var(--head);letter-spacing:-.01em}
+.biglbl{font:800 11px var(--head);letter-spacing:.12em;text-transform:uppercase;color:var(--pink2);margin-top:6px}
+.calmeta{text-align:right;font-size:13px;color:var(--blockMuted)}
+.calmeta b{color:#fff}
+.mac{margin-top:12px}
+.mac-top{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;margin-bottom:6px}
+.mac-name{font:800 12px var(--head);text-transform:uppercase;letter-spacing:.08em}
+.mac-val{color:var(--blockMuted)}
+.mac-val b{color:#fff}
+.bar{position:relative;height:12px;border-radius:8px;background:#3A3233;overflow:hidden}
+.bar .band{position:absolute;top:0;bottom:0;background:rgba(255,255,255,.12)}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:8px;background:var(--pink)}
+.bar .fill.on{background:var(--good)}
+.bar .fill.over{background:var(--over)}
+.bar .tick{position:absolute;top:-2px;bottom:-2px;width:2px;background:#fff;opacity:.8}
+.st{font:700 12px var(--body);padding:3px 8px;border-radius:999px;white-space:nowrap}
+.st.on{background:rgba(34,168,102,.18);color:#3DDC8A}
+.st.left{background:rgba(242,132,158,.16);color:var(--pink2)}
+.st.over{background:rgba(217,58,78,.2);color:#FF7385}
+.card:not(.block) .st.on{color:var(--good)}
+.card:not(.block) .st.left{color:var(--pink)}
+.card:not(.block) .st.over{color:var(--over)}
+.eatenline{margin-top:14px;padding-top:12px;border-top:1px solid var(--blockLine);font-size:13px;color:var(--blockMuted)}
 
-/* meals */
-.slot{display:flex;flex-direction:column;gap:6px}
-.slothead{display:flex;justify-content:space-between;align-items:center}
-.slothead .tot{font-size:.8rem}
-.entries{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-.entry{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border-top:1px solid var(--line)}
-.entry:first-child{border-top:0}
-.check{width:24px;height:24px;border-radius:7px;border:2px solid var(--line);background:transparent;display:grid;place-items:center;font-size:.8rem;color:var(--accent-ink)}
-.check[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
-.ename{font-weight:600;overflow-wrap:anywhere}
-.emac{font-size:.78rem;color:var(--muted)}
-.qty{display:flex;align-items:center;gap:4px}
-.qty button{width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);font-weight:700;line-height:1}
-.qty span{min-width:3ch;text-align:center;font-size:.85rem;font-weight:700}
-.addrow{display:block;width:100%;text-align:left;padding:10px 12px;border:0;border-top:1px dashed var(--line);background:transparent;color:var(--accent);font-weight:700}
-.entries:empty+.addrow{border-top:0}
-.empty{padding:14px;color:var(--muted);font-size:.9rem}
+.item{border-top:1px solid var(--line);padding:12px 0}
+.item:first-child{border-top:0}
+.item-top{display:flex;align-items:center;gap:10px}
+.check{flex:none;width:34px;height:34px;border-radius:10px;border:2px solid var(--line);background:transparent;color:transparent;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.check.on{background:var(--good);border-color:var(--good);color:#fff}
+.item-name{flex:1;min-width:0;font-weight:600}
+.item-name .sv{display:block;font-size:12px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item.eaten .item-name{opacity:.6}
+.xmini{flex:none;width:40px;height:40px;border:0;border-radius:12px;background:transparent;color:var(--muted);font-size:22px}
+.item-bot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;padding-left:44px}
+.macline{font-size:13px;color:var(--muted)}
+.macline b{color:var(--text);font-weight:700}
+.stepper{display:flex;align-items:center;background:var(--chip);border-radius:14px;flex:none}
+.stepper button{width:44px;height:44px;border:0;background:transparent;font-size:22px;font-weight:700;color:var(--pink)}
+.stepper span{min-width:44px;text-align:center;font-weight:800;font-size:15px}
+.empty{font-size:14px;color:var(--muted);padding:6px 0 2px}
+.skipbox{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--chip);border-radius:14px;padding:10px 12px;font-size:14px;color:var(--muted)}
+.addbtn{min-height:44px;padding:0 14px;border-radius:12px;border:2px solid var(--pink);background:transparent;color:var(--pink);font:800 12px var(--head);text-transform:uppercase;letter-spacing:.06em}
 
-/* library */
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
-.libitem{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:11px 12px;border-top:1px solid var(--line);background:var(--surface);border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left}
-.libitem:first-child{border-top:0}
-.cal{font-weight:700;font-size:.9rem}
-.tag{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-.search{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;font:inherit;color:var(--ink)}
+.dinner{border:2px solid var(--pink)}
+.dinner-main{background:var(--chip);border-radius:16px;padding:12px;margin-bottom:12px}
+.servrow{display:flex;align-items:center;gap:12px;margin-top:10px;padding-left:44px}
+.ofserv{font-size:14px;color:var(--muted);font-weight:600}
+.suggest{display:flex;align-items:center;gap:12px;margin:0 0 12px;padding:12px;border-radius:16px;background:var(--ink);color:#fff}
+[data-theme="dark"] .suggest{border:1px solid var(--blockLine)}
+.suggest .s-txt{flex:1;font-size:14px;line-height:1.35}
+.suggest .s-txt b{font:900 16px var(--head);color:var(--pink2)}
+.suggest .s-sub{font-size:12px;color:var(--blockMuted);margin-top:2px}
+.subhead{font:800 12px var(--head);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px;display:flex;align-items:center;justify-content:space-between}
+.breakdown{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+.breakdown td{padding:8px 4px;border-top:1px solid var(--line);text-align:right;white-space:nowrap}
+.breakdown td:first-child{text-align:left;font-weight:600}
+.breakdown tr.total td{font-weight:800;border-top:2px solid var(--text)}
+.breakdown th{font:800 10px var(--head);letter-spacing:.08em;color:var(--muted);text-align:right;padding:0 4px 4px}
+.breakdown th:first-child{text-align:left}
 
-/* forms */
-.form{display:flex;flex-direction:column;gap:12px}
-.field{display:flex;flex-direction:column;gap:4px;min-width:0}
-.field label{font-size:.78rem;font-weight:600;color:var(--muted)}
-.field input,.field select{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px;font:inherit;color:var(--ink);width:100%;min-width:0}
-.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px}
-.note{font-size:.85rem;color:var(--muted)}
+.ideas .aim{background:var(--chip);border-radius:14px;padding:12px;font-size:15px;margin:10px 0}
+.ideas .aim b{font-weight:800}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:40px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:var(--card);font:700 13px var(--body);color:var(--text);white-space:nowrap}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+[data-theme="dark"] .chip.on{background:var(--pink);border-color:var(--pink)}
+.idea{display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.idea-txt{flex:1;min-width:0}
+.idea-name{font-weight:700;font-size:15px}
+.idea-name .q{color:var(--pink);font-weight:800}
+.fitbadge{display:inline-block;margin-left:6px;font-size:11px;font-weight:800;color:var(--good)}
+.ideas-actions{display:flex;gap:8px;margin-top:10px}
+.ideas-actions .btn{flex:1;padding:0 10px}
+.modeseg{display:flex;background:var(--chip);border-radius:12px;padding:3px;margin-bottom:6px}
+.modeseg button{flex:1;min-height:40px;border:0;border-radius:10px;background:transparent;font:800 11px var(--head);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.modeseg button.on{background:var(--ink);color:#fff}
+[data-theme="dark"] .modeseg button.on{background:var(--pink)}
+.pl{border-top:1px solid var(--line);padding:12px 0}
+.pl.first{border-top:0}
+.pl-h{margin-bottom:4px}
+.pl-h .mac-name{color:var(--pink)}
+.pl-body{display:flex;align-items:center;gap:8px}
+.pl-txt{flex:1;min-width:0}
+.pl-none{font-size:14px;color:var(--muted)}
+.mixbtn{min-height:40px;padding:0 11px;border-radius:12px;border:0;background:var(--chip);color:var(--text);font:800 11px var(--head);text-transform:uppercase;letter-spacing:.05em;display:inline-flex;align-items:center;gap:5px;flex:none}
+.mixbtn svg{width:15px;height:15px}
+.proj{background:var(--chip);border-radius:14px;padding:12px;margin-top:6px}
+.proj-t{font:800 11px var(--head);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
+.proj-v{font-size:14px;font-weight:600;margin-bottom:8px}
+.proj-b{display:flex;flex-wrap:wrap;gap:6px}
 
-/* sheet */
-.scrim{position:fixed;inset:0;background:rgb(0 0 0 / .4);z-index:20}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--bg);border-radius:20px 20px 0 0;max-height:88%;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
-.sheet .sh{padding:14px 16px 10px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
-.sheet .sb{overflow:auto;padding:12px 16px 20px;display:flex;flex-direction:column;gap:12px}
-.sheet .sh{position:relative;touch-action:none}
-.sheetx{position:absolute;top:12px;right:16px}
-.sheet .sh h2{padding-right:44px}
-.sheet .grab{width:40px;height:4px;border-radius:9px;background:var(--line);align-self:center}
-.sheet-inner{max-width:560px;width:100%;margin:0 auto;display:flex;flex-direction:column;min-height:0;flex:1}
+.pagehead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 12px}
+.search{width:100%;min-height:50px;border-radius:14px;border:2px solid var(--line);background:var(--card);padding:0 14px;outline:none}
+.search:focus{border-color:var(--pink)}
+.libitem{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:0;background:var(--card);border-radius:16px;padding:14px;margin:8px 0;box-shadow:var(--shadow);min-height:64px}
+.libitem .li-main{flex:1;min-width:0}
+.libitem .li-name{font-weight:700}
+.libitem .li-sub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.libitem .li-cal{font:900 18px var(--head);text-align:right}
+.libitem .li-cal small{display:block;font:600 11px var(--body);color:var(--muted)}
+.libcount{font-size:13px;color:var(--muted);margin:6px 2px}
 
-/* tabs */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);padding:6px 16px calc(6px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;gap:6px}
-.tabs button{flex:1;max-width:180px;border:0;background:transparent;border-radius:10px;padding:8px 4px;font-weight:700;font-size:.85rem;color:var(--muted)}
-.tabs{background:var(--hero-bg);border-top:0}.tabs button{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:.75rem;color:#BBAAAF}.tabs button[aria-current="page"]{background:var(--accent);color:#FFFFFF}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:99px;font-size:.85rem;font-weight:600;z-index:30}
-.import{display:flex;flex-direction:column;gap:6px;border:1px dashed var(--accent);border-radius:8px;padding:10px 12px;background:var(--accent-soft)}
-.import label.btn{display:inline-block;cursor:pointer;align-self:flex-start}
-.water{display:flex;flex-wrap:wrap;gap:8px}
-.drop{width:34px;height:40px;border:2px solid var(--accent);background:transparent;border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;padding:0}
-.drop[aria-pressed="true"]{background:var(--accent)}
-.chip.daily{padding:3px 9px;font-size:.72rem}
-.board{display:grid;grid-template-columns:auto repeat(7,minmax(0,1fr));gap:5px;align-items:center}
-.board .wk{font-family:var(--display);font-size:.68rem;font-weight:800;color:var(--muted);padding-right:4px}
-.cell{aspect-ratio:1;max-width:100%;border-radius:6px;background:var(--sunk);display:grid;place-items:center;font-size:.62rem;font-weight:700;color:var(--muted)}
-.cell.hit{background:var(--accent);color:var(--accent-ink)}
-.cell.close{background:var(--accent-soft);color:var(--accent);border:1.5px solid var(--accent)}
-.cell.today{outline:2px solid var(--ink);outline-offset:1px}
-.status{font-size:.75rem;color:var(--muted)}
-@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.field label{font:800 11px var(--head);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.field input,.field select,.field textarea{min-height:50px;border-radius:14px;border:2px solid var(--line);background:var(--card);padding:0 14px;outline:none;width:100%}
+.field textarea{padding:12px 14px;min-height:110px;font-size:13px;font-family:ui-monospace,Menlo,monospace}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pink)}
+.seg{display:flex;background:var(--chip);border-radius:14px;padding:4px}
+.seg button{flex:1;min-height:44px;border:0;border-radius:11px;background:transparent;font:800 12px var(--head);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.seg button.on{background:var(--ink);color:#fff}
+[data-theme="dark"] .seg button.on{background:var(--pink)}
+.boardcount{display:flex;align-items:baseline;gap:6px}
+.boardcount .bignum{color:var(--pink2)}
+.boardcount span{font:800 18px var(--head);color:var(--blockMuted)}
+.board{display:grid;grid-template-columns:34px repeat(7,1fr);gap:6px;margin-top:14px}
+.board .wk{font:800 10px var(--head);color:var(--blockMuted);display:flex;align-items:center;letter-spacing:.06em}
+.board .dh{font:800 10px var(--head);color:var(--blockMuted);text-align:center;letter-spacing:.06em}
+.cell{aspect-ratio:1;border-radius:10px;border:0;background:#2E2728;color:#8E8184;font:800 13px var(--head);display:flex;align-items:center;justify-content:center;padding:0}
+.cell.miss{background:#3A3233;color:#C9BDC0}
+.cell.hit{background:var(--pink);color:#fff}
+.cell.today{outline:2px solid var(--pink2);outline-offset:2px}
+.legend{display:flex;gap:14px;margin-top:12px;font-size:12px;color:var(--blockMuted);flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-2px;margin-right:5px}
+.ver{font:800 11px var(--head);letter-spacing:.08em;color:var(--muted);background:var(--chip);padding:5px 9px;border-radius:999px}
+.footer{text-align:center;font-size:12px;color:var(--muted);margin:18px 0 0}
+
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--ink);border-top:3px solid var(--pink);display:flex;
+  padding:6px calc(env(safe-area-inset-right) + 8px) calc(env(safe-area-inset-bottom) + 6px) calc(env(safe-area-inset-left) + 8px)}
+.tab{flex:1;min-height:58px;border:0;background:transparent;color:#B9ADB0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:800 11px var(--head);text-transform:uppercase;letter-spacing:.1em}
+.tab svg{width:24px;height:24px}
+.tab.active{color:var(--pink2)}
+
+.backdrop{position:fixed;inset:0;z-index:40;background:rgba(12,9,10,.62);opacity:0;pointer-events:none;transition:opacity .22s}
+.backdrop.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:640px;margin:0 auto;max-height:90vh;max-height:90dvh;display:flex;flex-direction:column;
+  background:var(--card);border-radius:24px 24px 0 0;transform:translateY(105%);transition:transform .26s cubic-bezier(.2,.8,.2,1);padding-bottom:env(safe-area-inset-bottom);visibility:hidden}
+.sheet.open{transform:translateY(0);visibility:visible}
+.sheet-head{flex:none;padding:10px 16px 12px;border-bottom:1px solid var(--line);touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.grab{width:46px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 10px}
+.sheet-titlerow{display:flex;align-items:center;gap:10px}
+.sheet-titlerow h2{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xbtn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--chip);font-size:24px;line-height:1;color:var(--text)}
+.sheet-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:14px 16px 24px}
+.addgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.addgrid .btn{min-height:50px;font-size:12px}
+.addgrid .btn.dinner{background:var(--ink);color:#fff}
+.divider{height:1px;background:var(--line);margin:18px 0}
+.calc{font-size:13px;color:var(--pink);font-weight:600;margin:-4px 0 10px}
+.pick{width:100%;display:flex;align-items:center;gap:10px;text-align:left;border:0;background:var(--chip);border-radius:14px;padding:12px 14px;margin:8px 0;min-height:60px}
+.pick .li-main{flex:1;min-width:0}
+.pick .li-name{font-weight:700}
+.pick .li-sub{font-size:12px;color:var(--muted)}
+.pick .plus{font:900 22px var(--head);color:var(--pink)}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,20px);z-index:60;background:var(--ink);color:#fff;border:1px solid var(--pink);padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:all .2s;max-width:88vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
+</head>
+<body>
 
-<div class="wrap" id="app"></div>
-<nav class="tabs" aria-label="Sections">
-  <button id="tab-today" data-tab="today" aria-current="page">Today</button>
-  <button id="tab-library" data-tab="library">Library</button>
-  <button id="tab-settings" data-tab="settings">Targets</button>
+<section id="screen-today" class="screen active"></section>
+<section id="screen-library" class="screen"></section>
+<section id="screen-targets" class="screen"></section>
+
+<nav class="tabbar">
+  <button class="tab active" data-act="tab" data-tab="today">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Today</button>
+  <button class="tab" data-act="tab" data-tab="library">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Library</button>
+  <button class="tab" data-act="tab" data-tab="targets">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>Targets</button>
 </nav>
-<div id="sheetRoot"></div>
-<div class="toast" id="toast" hidden></div>
+
+<div id="backdrop" class="backdrop"></div>
+<div id="sheet" class="sheet" role="dialog" aria-modal="true">
+  <div id="sheetHead" class="sheet-head">
+    <div class="grab"></div>
+    <div class="sheet-titlerow"><h2 id="sheetTitle"></h2><button class="xbtn" data-act="closeSheet" aria-label="Close">&times;</button></div>
+  </div>
+  <div id="sheetBody" class="sheet-body"></div>
+</div>
+<div id="toast" class="toast"></div>
 
 <script>
 (function(){
-const CATS=["Shakes & Coffee","Breakfast","Lunch","Snacks","Proteins","Sides & Extras","Drinks","Dinners"];
-const SLOTS=[["coffee","First Thing"],["breakfast","Breakfast"],["lunch","Lunch"],["snacks","Snacks"],["post","Post-Workout"]];
-const EXAMPLE_TARGETS={cal:1650,p:135,c:150,f:55};
+'use strict';
 
-const S={
-  tab:"today", day:todayKey(),
-  settings:null, library:null, dayDoc:null,
-  libCat:"All", libQ:"",
-  db:null, mode:"loading"
+/* ================= CONSTANTS ================= */
+var APP_VERSION = '1.1.0';
+var KEY = 'macroPlanner.v1';
+var MAC = ['cal','p','c','f'];
+var MEALS = [
+  {key:'first', label:'First Thing'},
+  {key:'breakfast', label:'Breakfast'},
+  {key:'lunch', label:'Lunch'},
+  {key:'snacks', label:'Snacks'},
+  {key:'post', label:'Post-Workout'}
+];
+var PLAN_MEALS = ['breakfast','lunch','snacks','post'];
+var WEIGHTS = {breakfast:32, lunch:36, snacks:22, post:10};
+var CATS = ['Shakes & Coffee','Breakfast','Lunch','Snacks','Proteins','Sides & Extras','Dinners'];
+var AFFINITY = {
+  breakfast:['Breakfast','Shakes & Coffee','Proteins'],
+  lunch:['Lunch','Proteins'],
+  snacks:['Snacks','Shakes & Coffee','Proteins'],
+  post:['Shakes & Coffee','Snacks','Proteins']
 };
-let unsubDay=null;
-let SAMPLE=null,IMG_OK=false;
+var QTYS = [0.5, 1, 1.5, 2];
+var SCORE_W = {cal:1.5, p:1.2, c:1, f:1};
+var COFFEE = {id:'coffee', name:'Protein Coffee', serving:'1 scoop Optimum Nutrition Gold Standard Whey (Vanilla Ice Cream) in coffee',
+  cat:'Shakes & Coffee', cal:125, p:24, c:4, f:1.5, servings:null, calAuto:false};
+var MIX_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>';
 
-function todayKey(d){d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
-function parseKey(k){const [y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d)}
-function shiftKey(k,n){const d=parseKey(k);d.setDate(d.getDate()+n);return todayKey(d)}
-function uid(){return Math.random().toString(36).slice(2,10)}
-function r0(n){return Math.round(n)}
-function fmtQ(q){return (Math.round(q*100)/100).toString()}
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function sum(list){return list.reduce((a,e)=>({cal:a.cal+e.cal*e.q,p:a.p+e.p*e.q,c:a.c+e.c*e.q,f:a.f+e.f*e.q}),{cal:0,p:0,c:0,f:0})}
-function toast(t){const el=document.getElementById("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,1800)}
+/* ================= MATH ================= */
+function r1(x){ x = +x || 0; return Math.round(x * 10) / 10; }
+function r2(x){ return Math.round((+x || 0) * 100) / 100; }
+function zero(){ return {cal:0,p:0,c:0,f:0}; }
+function addM(a,b){ return {cal:r1(a.cal+b.cal), p:r1(a.p+b.p), c:r1(a.c+b.c), f:r1(a.f+b.f)}; }
+function subM(a,b){ return {cal:r1(a.cal-b.cal), p:r1(a.p-b.p), c:r1(a.c-b.c), f:r1(a.f-b.f)}; }
+function scaleM(a,k){ return {cal:r1(a.cal*k), p:r1(a.p*k), c:r1(a.c*k), f:r1(a.f*k)}; }
+function clampM(a){ return {cal:Math.max(0,a.cal), p:Math.max(0,a.p), c:Math.max(0,a.c), f:Math.max(0,a.f)}; }
+function autoCal(p,c,f){ return r1(p*4 + c*4 + f*9); }
+function num(v){ if(v===null||v===undefined) return null; var s=String(v).trim().replace(',', '.'); if(s==='') return null; var x=parseFloat(s); return isFinite(x)?x:null; }
 
-/* ---------- storage: db when available, else this browser ---------- */
-const LS={get(k){try{return JSON.parse(localStorage.getItem("dfm:"+k))}catch(e){return null}},set(k,v){try{localStorage.setItem("dfm:"+k,JSON.stringify(v))}catch(e){}}};
-const writeQ={};
-function save(path,data){
-  if(S.mode!=="db"){LS.set(path,data);return}
-  const q=writeQ[path]||(writeQ[path]={pending:null,busy:false,timer:null});
-  q.pending=data;clearTimeout(q.timer);
-  q.timer=setTimeout(async function flush(){
-    if(q.busy){q.timer=setTimeout(flush,200);return}
-    const body=q.pending;q.pending=null;if(!body)return;q.busy=true;
-    try{await S.db.doc(path).set(body)}
-    catch(e){if(e&&e.code==="unavailable"){q.pending=q.pending||body;setTimeout(flush,800+Math.random()*800)}else toast("Couldn't save: "+(e&&e.message||"try again"))}
-    finally{q.busy=false}
-  },350);
-}
-function dayPath(k){return "days/"+k}
-function setDay(doc){delete doc.fresh;S.dayDoc=doc;save(dayPath(S.day),doc);if(S.day>=todayKey())syncDaily(doc);render()}
-function setLibrary(items){S.library={items};save("app/library",S.library);render()}
-function setSettings(s){S.settings=s;save("app/settings",s);render()}
-
-function subscribeDay(){
-  if(unsubDay){unsubDay();unsubDay=null}
-  S.dayDoc=null;
-  if(S.mode==="db"){
-    unsubDay=S.db.doc(dayPath(S.day)).onSnapshot(s=>{
-      if(writeQ[dayPath(S.day)]&&writeQ[dayPath(S.day)].pending)return;
-      S.dayDoc=s.exists?clone(s.data()):freshDay();render()},()=>{});
-  }else{S.dayDoc=LS.get(dayPath(S.day))||freshDay();render()}
-}
-function clone(o){return JSON.parse(JSON.stringify(o))}
-function freshDay(){
-  const daily=(S.settings&&S.settings.daily)||{},on=(S.settings&&S.settings.dailyOn)||{};
-  const entries=[];Object.keys(on).forEach(sl=>{if(on[sl])(daily[sl]||[]).forEach(t=>entries.push(Object.assign({},t,{id:uid(),slot:sl,done:false})))});
-  return {entries,dinner:null,water:0,fresh:true};
-}
-function tmpl(list){return list.map(e=>({name:e.name,cal:e.cal,p:e.p,c:e.c,f:e.f,q:e.q}))}
-function syncDaily(d){
-  const on=(S.settings&&S.settings.dailyOn)||{};let changed=false;const daily=Object.assign({},(S.settings&&S.settings.daily)||{});
-  Object.keys(on).forEach(sl=>{if(!on[sl])return;const t=tmpl((d.entries||[]).filter(e=>e.slot===sl));if(JSON.stringify(t)!==JSON.stringify(daily[sl]||[])){daily[sl]=t;changed=true}});
-  if(changed){S.settings=Object.assign({},S.settings,{daily});save("app/settings",S.settings)}
+/* ================= FORMAT ================= */
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function fInt(x){ return Math.round(+x||0).toLocaleString('en-US'); }
+function fG(x){ var v=r1(x); return (Math.abs(v - Math.round(v)) < 1e-9) ? String(Math.round(v)) : v.toFixed(1); }
+function fQ(q){ return String(r2(q)); }
+function macLine(m, bold){
+  var c = bold ? '<b>'+fInt(m.cal)+' cal</b>' : fInt(m.cal)+' cal';
+  return c+' · '+fG(m.p)+'P · '+fG(m.c)+'C · '+fG(m.f)+'F';
 }
 
-async function boot(){
-  render();
-  let db=null;
-  try{ if(window.claude&&claude.use) db=await claude.use("db") }catch(e){db=null}
-  try{ if(window.claude&&claude.use){ SAMPLE=await claude.use("sample"); if(SAMPLE){const caps=await SAMPLE.limits().catch(()=>null);IMG_OK=!!(caps&&caps.images)} } }catch(e){SAMPLE=null}
-  if(db){
-    S.db=db;S.mode="db";
-    db.doc("app/settings").onSnapshot(s=>{if(writeQ["app/settings"]&&writeQ["app/settings"].pending)return;S.settings=s.exists?clone(s.data()):{};if(S.dayDoc&&S.dayDoc.fresh&&!(S.dayDoc.entries||[]).length)S.dayDoc=freshDay();render()},()=>{});
-    db.doc("app/library").onSnapshot(s=>{if(writeQ["app/library"]&&writeQ["app/library"].pending)return;S.library=s.exists?clone(s.data()):{items:[]};render()},()=>{});
-  }else{
-    S.mode="local";
-    const seed=window.LOCAL_SEED||{};
-    S.settings=LS.get("app/settings")||seed.settings||{targets:EXAMPLE_TARGETS,example:true};
-    S.library=LS.get("app/library")||seed.library||{items:[]};
-  }
-  subscribeDay();
+/* ================= DATES ================= */
+function pad(n){ return (n<10?'0':'')+n; }
+function keyOf(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function parseKey(k){ var a=k.split('-').map(Number); return new Date(a[0], a[1]-1, a[2], 12); }
+function todayKey(){ return keyOf(new Date()); }
+function addDays(k,n){ var d=parseKey(k); d.setDate(d.getDate()+n); return keyOf(d); }
+function diffDays(a,b){ return Math.round((parseKey(b)-parseKey(a))/86400000); }
+function prettyDate(k){ return parseKey(k).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); }
+function dayName(k){
+  var n = diffDays(todayKey(), k);
+  if(n===0) return 'Today'; if(n===1) return 'Tomorrow'; if(n===-1) return 'Yesterday';
+  return parseKey(k).toLocaleDateString('en-US',{weekday:'long'});
 }
+function dayShort(k){ var n=diffDays(todayKey(),k); return n===0?'Today':n===1?'Tomorrow':n===-1?'Yesterday':prettyDate(k); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
 
-/* ---------- derived ---------- */
-function targets(){return (S.settings&&S.settings.targets)||EXAMPLE_TARGETS}
-function mainTotal(d){if(!d||!d.dinner)return {cal:0,p:0,c:0,f:0};const x=d.dinner;return {cal:x.cal*x.q,p:x.p*x.q,c:x.c*x.q,f:x.f*x.q}}
-function sidesTotal(d){return sum(((d&&d.entries)||[]).filter(e=>e.slot==="dinner"))}
-function dinnerTotal(d){return add(mainTotal(d),sidesTotal(d))}
-function otherTotal(d){return sum(((d&&d.entries)||[]).filter(e=>e.slot!=="dinner"))}
-function eatenTotal(d){const e=sum(((d&&d.entries)||[]).filter(x=>x.done));if(d&&d.dinner&&d.dinner.done){const t=dinnerTotal(d);for(const k in e)e[k]+=t[k]}return e}
-function add(a,b){return {cal:a.cal+b.cal,p:a.p+b.p,c:a.c+b.c,f:a.f+b.f}}
-function fitServings(d){
-  const t=targets(),o=add(otherTotal(d),sidesTotal(d)),x=d.dinner;
-  const rem={cal:t.cal-o.cal,c:t.c-o.c,f:t.f-o.f,p:t.p-o.p};
-  let best=Infinity,bind="calories";
-  [["cal","calories"],["c","carbs"],["f","fat"]].forEach(([k,n])=>{if(x[k]>0){const s=rem[k]/x[k];if(s<best){best=s;bind=n}}});
-  if(!isFinite(best))best=2;
-  best=Math.max(0,Math.floor(best*4)/4);
-  return {s:best,bind,rem};
+/* ================= STATE ================= */
+function defaultState(){
+  return {
+    schema:1,
+    settings:{ targets:{cal:1618,p:142,c:141,f:54}, tol:{cal:50,p:5,c:8,f:4}, start:'2026-10-18', dinnerShare:40, theme:'auto', ideaMode:'day' },
+    library:[JSON.parse(JSON.stringify(COFFEE))],
+    days:{}
+  };
 }
-function weekInfo(){
-  const st=S.settings&&S.settings.start;if(!st)return null;
-  const diff=Math.round((parseKey(S.day)-parseKey(st))/864e5);
-  if(diff<0)return {pre:true,days:-diff};
-  if(diff>=42)return {done:true};
-  return {week:Math.floor(diff/7)+1,day:diff%7+1,n:diff+1};
-}
-
-/* ---------- render ---------- */
-function render(){
-  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-current",b.dataset.tab===S.tab?"page":"false"));
-  const app=document.getElementById("app");
-  if(S.tab==="today")app.innerHTML=viewToday();
-  else if(S.tab==="library")app.innerHTML=viewLibrary();
-  else app.innerHTML=viewSettings();
-}
-
-function barHTML(label,cls,val,dn,target){
-  const pct=Math.min(100,target?val/target*100:0),dpct=Math.min(100,target?dn/target*100:0);
-  const left=target-val;
-  return `<div class="bar"><div class="lbl"><span class="${cls}">${label}</span><span class="num ${left<-0.5?"over":"muted"}">${left<-0.5?"+"+r0(-left)+"g over":r0(left)+"g left"}</span></div>
-  <div class="track"><div class="fill dn" style="width:${dpct}%;background:var(--${cls==="p"?"pro":cls==="c"?"carb":"fat"})"></div><div class="fill" style="width:${pct}%;background:var(--${cls==="p"?"pro":cls==="c"?"carb":"fat"})"></div></div>
-  <div class="num muted" style="font-size:.75rem">${r0(val)} / ${target}g</div></div>`;
-}
-
-function viewToday(){
-  const d=S.dayDoc,t=targets(),wk=weekInfo();
-  const isToday=S.day===todayKey();
-  const dateLabel=parseKey(S.day).toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
-  let sub=isToday?"Today":(S.day===shiftKey(todayKey(),1)?"Tomorrow":(S.day===shiftKey(todayKey(),-1)?"Yesterday":""));
-  let wkText=wk?(wk.pre?`Challenge starts in ${wk.days} day${wk.days>1?"s":""}`:wk.done?"Challenge complete":`Week ${wk.week} of 6 · Day ${wk.n} of 42`):"";
-  let html=`<header class="top"><div><div class="eyebrow">${esc([sub,wkText].filter(Boolean).join(" · ")||"Plan")}</div><h1>${esc(dateLabel)}</h1></div>
-  <div class="daynav"><button class="iconbtn" id="prevDay" aria-label="Previous day">‹</button>${isToday?"":`<button class="chip" id="goToday">Today</button>`}<button class="iconbtn" id="nextDay" aria-label="Next day">›</button></div></header>`;
-  if(S.settings&&S.settings.example!==false&&!(S.settings.targets)){}
-  if(!d||!S.settings||!S.library) return html+`<div class="card"><p class="muted" style="margin:0">Loading your plan…</p></div>`;
-  if(!S.settings.targets||S.settings.example)html+=`<div class="card" style="gap:8px"><strong>These are example targets.</strong><span class="note">Put in your challenge's macro budget so the math is yours.</span><div><button class="btn small" data-go="settings">Set my targets</button></div></div>`;
-
-  const dn=dinnerTotal(d),tot=add(otherTotal(d),dn),left=t.cal-tot.cal;
-  html+=`<section class="budget" aria-label="Day budget"><div class="calrow"><div><div class="eyebrow">${left<-0.5?"Over budget":"Calories left"}</div><div class="big num ${left<-0.5?"over":""}">${r0(Math.abs(left))}</div></div>
-  <div class="num muted" style="text-align:right;font-size:.85rem">${r0(tot.cal)} planned<br>of ${t.cal} cal</div></div>
-  <div class="bars">${barHTML("Protein","p",tot.p,dn.p,t.p)}${barHTML("Carbs","c",tot.c,dn.c,t.c)}${barHTML("Fat","f",tot.f,dn.f,t.f)}</div>
-  <div class="legend"><span><i class="soft"></i>Dinner (reserved)</span><span><i></i>Everything planned</span></div>
-  ${t.p-tot.p>15?`<button class="btn small" id="proGap" style="align-self:flex-start">Close the ${r0(t.p-tot.p)}g protein gap</button>`:""}</section>`;
-
-  // dinner first
-  html+=`<section class="dinner" aria-label="Dinner"><div class="head"><div><div class="eyebrow">Dinner · planned first</div>`;
-  if(d.dinner){
-    const x=d.dinner,fit=fitServings(d),sides=(d.entries||[]).filter(e=>e.slot==="dinner");
-    html+=`<div class="dname">${esc(x.name)}</div></div><button class="link" id="changeDinner">Change</button></div>
-    <div class="row" style="justify-content:space-between"><div class="stepper"><button id="dMinus" aria-label="Less dinner">−</button><span class="val num">${fmtQ(x.q)}</span><button id="dPlus" aria-label="More dinner">+</button></div>
-    <span class="num muted" style="font-size:.85rem">${x.makes?`of ${x.makes} servings · `:""}${esc(x.serving||"serving")}</span></div>
-    ${macroLine("Recipe",mainTotal(d))}
-    ${sidesHTML(d)}
-    ${sides.length?macroLine("Dinner total",dn,true):""}
-    <div class="fit"><span class="eyebrow">Portion that rounds out your day</span>
-      <span><strong class="num">${fmtQ(fit.s)} serving${fit.s===1?"":"s"}</strong> <span class="muted">of the recipe fits what's left after your other meals${sides.length?" and your sides":""} (${esc(fit.bind)} is the limit).</span></span>
-      ${fit.rem.p-x.p*fit.s>5?`<span class="note">At that portion you'd still be ${r0(fit.rem.p-x.p*fit.s)}g short on protein. A protein snack closes the gap.</span>`:""}
-      ${Math.abs(fit.s-x.q)>0.01?`<div><button class="btn small" id="useFit">Use ${fmtQ(fit.s)} servings</button></div>`:`<span class="note">Your portion matches.</span>`}
-    </div>
-    <label class="row" style="font-size:.88rem;font-weight:600"><input type="checkbox" id="dDone" ${x.done?"checked":""}> Eaten</label>`;
-  }else{
-    html+=`<div class="dname">What's for dinner?</div></div></div>
-    <p class="note" style="margin:0">Pick tonight's family dinner first. Its macros get reserved, and breakfast, lunch and snacks fill in around it.</p>
-    <div><button class="btn" id="pickDinner">Choose dinner</button></div>
-    ${sidesHTML(d)}`;
-  }
-  html+=`</section>`;
-
-  // slots
-  SLOTS.forEach(([key,label])=>{
-    const list=(d.entries||[]).filter(e=>e.slot===key),st=sum(list);
-    const on=!!((S.settings&&S.settings.dailyOn)||{})[key];
-    html+=`<section class="slot"><div class="slothead"><h2>${label}</h2><div class="row" style="gap:8px">${list.length?`<span class="tot num muted">${r0(st.cal)} cal · ${r0(st.p)}P</span>`:""}<button class="chip daily" data-daily="${key}" aria-pressed="${on}" title="Plan this automatically every day">${on?"✓ ":""}Every day</button></div></div><div><div class="entries">${list.map(entryHTML).join("")}${list.length?"":""}</div><button class="addrow entries" style="border-radius:var(--r);${list.length?"margin-top:6px;":""}border:1px dashed var(--line)" data-add="${key}">+ Add to ${label.toLowerCase()}</button></div></section>`;
+function normalize(o){
+  var d = defaultState();
+  if(!o || typeof o!=='object') return d;
+  var st = o.settings || {};
+  var s = {
+    schema:1,
+    settings: Object.assign({}, d.settings, st),
+    library: Array.isArray(o.library) ? o.library : d.library,
+    days: (o.days && typeof o.days==='object') ? o.days : {}
+  };
+  s.settings.targets = Object.assign({}, d.settings.targets, st.targets||{});
+  s.settings.tol = Object.assign({}, d.settings.tol, st.tol||{});
+  s.library.forEach(function(it){ if(!it.id) it.id=uid(); MAC.forEach(function(m){ it[m]=r1(it[m]); }); if(CATS.indexOf(it.cat)<0) it.cat='Snacks'; });
+  Object.keys(s.days).forEach(function(k){
+    var day = s.days[k] || {};
+    day.meals = Object.assign({first:[],breakfast:[],lunch:[],snacks:[],post:[]}, day.meals||{});
+    day.sides = Array.isArray(day.sides) ? day.sides : [];
+    day.skipped = day.skipped || {};
+    if(day.dinner===undefined) day.dinner = null;
+    s.days[k] = day;
   });
-  const w=d.water||0,wt=(S.settings&&S.settings.waterGoal)||8;
-  html+=`<section class="slot"><div class="slothead"><h2>Water</h2><span class="tot num muted">${w} of ${wt} glasses</span></div>
-   <div class="water">${Array.from({length:Math.max(wt,w)},(_,i)=>`<button class="drop" data-water="${i+1}" aria-pressed="${i<w}" aria-label="${i+1} glasses"></button>`).join("")}</div></section>`;
-  const own=(d.entries||[]).filter(e=>!((S.settings&&S.settings.dailyOn)||{})[e.slot]);
-  if(!own.length&&!d.dinner)html+=`<button class="btn ghost" id="copyYesterday">Copy meals from the day before</button>`;
-  html+=`<p class="status">${S.mode==="db"?"Saved to your account.":"Saved in this browser only."}</p>`;
-  return html.replace(/<div class="entries"><\/div>/g,"");
+  return s;
 }
-function macroLine(label,m,bold){return `<div class="num row" style="font-size:.88rem;justify-content:space-between;gap:6px;${bold?"border-top:1.5px solid var(--accent);padding-top:8px;":""}"><span class="${bold?"":"muted"}" style="font-weight:700">${label}</span><span><b>${r0(m.cal)} cal</b> · <span class="p">${r0(m.p)}P</span> · <span class="c">${r0(m.c)}C</span> · <span class="f">${r0(m.f)}F</span></span></div>`}
-function sidesHTML(d){
-  const sides=(d.entries||[]).filter(e=>e.slot==="dinner");
-  return `<div class="slot"><span class="eyebrow">Sides & extras</span>${sides.length?`<div class="entries">${sides.map(entryHTML).join("")}</div>`:""}<button class="addrow entries" style="border-radius:var(--r);border:1px dashed var(--accent)" data-add="dside">+ Add a side</button></div>`;
+function load(){
+  try { var raw = localStorage.getItem(KEY); if(raw) return normalize(JSON.parse(raw)); } catch(e){}
+  return defaultState();
 }
-function entryHTML(e){
-  return `<div class="entry"><button class="check" data-done="${e.id}" aria-pressed="${e.done?"true":"false"}" aria-label="Mark ${esc(e.name)} eaten">${e.done?"✓":""}</button>
-  <div style="min-width:0"><div class="ename">${esc(e.name)}</div><div class="emac num">${r0(e.cal*e.q)} cal · <span class="p">${r0(e.p*e.q)}P</span> · <span class="c">${r0(e.c*e.q)}C</span> · <span class="f">${r0(e.f*e.q)}F</span></div></div>
-  <div class="qty"><button data-qm="${e.id}" aria-label="Less">−</button><span class="num">${fmtQ(e.q)}×</span><button data-qp="${e.id}" aria-label="More">+</button></div></div>`;
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch(e){ toast('Could not save. Storage may be full.'); }
 }
 
-function libList(cat,q,remain){
-  let items=(S.library&&S.library.items)||[];
-  if(cat&&cat!=="All")items=items.filter(i=>i.cat===cat);
-  if(q){const s=q.toLowerCase();items=items.filter(i=>i.name.toLowerCase().includes(s))}
-  if(remain){items=items.map(i=>({i,fits:i.cal<=remain.cal+1&&i.c<=remain.c+1&&i.f<=remain.f+1,score:i.p/Math.max(i.cal,1)})).sort((a,b)=>(b.fits-a.fits)||(b.score-a.score)).map(x=>Object.assign({},x.i,{_fits:x.fits}))}
-  else items=items.slice().sort((a,b)=>a.name.localeCompare(b.name));
-  return items;
+var S = load();
+var ui = { tab:'today', dayKey:todayKey(), lastToday:todayKey(), ideaMeal:null, ideaPage:0, libCat:'All', libSearch:'', lastIdeas:[], sheet:null };
+
+function getItem(id){ for(var i=0;i<S.library.length;i++) if(S.library[i].id===id) return S.library[i]; return null; }
+
+function ensureDay(k){
+  var d = S.days[k];
+  if(!d){
+    d = { dinner:null, sides:[], meals:{first:[],breakfast:[],lunch:[],snacks:[],post:[]}, skipped:{} };
+    var cof = getItem('coffee');
+    if(cof) d.meals.first.push(makeEntry(cof,1));
+    S.days[k] = d;
+    save();
+  }
+  return d;
 }
-function libItemHTML(i,attr){
-  return `<button class="libitem" ${attr}="${i.id}"><div style="min-width:0"><div class="ename">${esc(i.name)}</div><div class="emac num">${esc(i.serving||"1 serving")} · <span class="p">${r0(i.p)}P</span> · <span class="c">${r0(i.c)}C</span> · <span class="f">${r0(i.f)}F</span>${i._fits===false?' · <span class="over">over what\'s left</span>':""}</div></div><div style="text-align:right"><div class="cal num">${r0(i.cal)}</div><div class="tag">${esc(i.cat)}</div></div></button>`;
+function makeEntry(it, qty){
+  return { uid:uid(), itemId:it.id, name:it.name, serving:it.serving||'', cat:it.cat,
+    cal:r1(it.cal), p:r1(it.p), c:r1(it.c), f:r1(it.f), servings:it.servings||null, qty:r2(qty||1), eaten:false };
+}
+function em(e){ return scaleM(e, e.qty); }
+function sumEntries(list){ return list.reduce(function(t,e){ return addM(t, em(e)); }, zero()); }
+function allEntries(d){
+  var a = []; if(d.dinner) a.push(d.dinner);
+  a = a.concat(d.sides);
+  MEALS.forEach(function(m){ a = a.concat(d.meals[m.key]); });
+  return a;
+}
+function dayTotals(d, opt){
+  opt = opt || {};
+  var t = zero();
+  if(d.dinner && !opt.noDinner) t = addM(t, em(d.dinner));
+  if(!opt.noDinner) t = addM(t, sumEntries(d.sides));
+  MEALS.forEach(function(m){ t = addM(t, sumEntries(d.meals[m.key])); });
+  return t;
+}
+function eatenTotals(d){ return sumEntries(allEntries(d).filter(function(e){ return e.eaten; })); }
+function openMeals(d){ return PLAN_MEALS.filter(function(m){ return !d.skipped[m] && d.meals[m].length===0; }); }
+
+function status(m, planned){
+  var T = S.settings.targets[m], tol = S.settings.tol[m];
+  var diff = r1(T - planned);
+  if(Math.abs(diff) <= tol) return {k:'on', diff:diff};
+  return diff > 0 ? {k:'left', diff:diff} : {k:'over', diff:-diff};
+}
+function dayHit(d){
+  if(!d) return false;
+  var t = dayTotals(d);
+  return MAC.every(function(m){ return status(m, t[m]).k==='on'; });
+}
+function devScore(sum, goal){
+  var tol = S.settings.tol, s = 0, hit = true;
+  MAC.forEach(function(m){
+    var n = Math.abs(sum[m]-goal[m]) / Math.max(0.1, tol[m]);
+    if(n > 1) hit = false;
+    s += SCORE_W[m] * (n <= 1 ? 0.25*n*n : n*n - 0.75);
+  });
+  return {s:s, hit:hit};
 }
 
-function viewLibrary(){
-  if(!S.library)return `<h1>Library</h1><div class="card"><p class="muted" style="margin:0">Loading…</p></div>`;
-  const items=libList(S.libCat,S.libQ);
-  let html=`<header class="top"><div><div class="eyebrow">Go-to foods & recipes</div><h1>Library</h1></div><div class="row"><button class="btn small ghost" id="importItem">Import MFP</button><button class="btn small" id="newItem">+ New</button></div></header>
-  <input class="search" id="libQ" type="search" placeholder="Search your library" value="${esc(S.libQ)}">
-  <div class="chips">${["All"].concat(CATS).map(c=>`<button class="chip" data-libcat="${esc(c)}" aria-pressed="${S.libCat===c}">${esc(c)}</button>`).join("")}</div>`;
-  if(!S.library.items.length)html+=`<div class="card"><strong>Your library is empty.</strong><span class="note">Add the foods you eat on repeat: a breakfast you like, a lunch you can make in five minutes, grab-and-go snacks. For dinners, copy the per-serving macros from the recipe in MyFitnessPal.</span><div><button class="btn small" id="newItem2">Add first item</button></div></div>`;
-  else html+=items.length?`<div class="entries">${items.map(i=>libItemHTML(i,"data-edit")).join("")}</div>`:`<p class="note">Nothing in ${esc(S.libCat)} yet.</p>`;
-  html+=`<p class="note">Tap an item to add it to your day or edit it. Dinners can include how many servings the whole recipe makes, so you'll see your share of the pan.</p>`;
-  return html;
+/* ================= THEME ================= */
+var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+function applyTheme(){
+  var t = S.settings.theme;
+  var dark = t==='dark' || (t==='auto' && mq && mq.matches);
+  document.documentElement.setAttribute('data-theme', dark?'dark':'light');
+}
+if(mq){ if(mq.addEventListener) mq.addEventListener('change', applyTheme); else if(mq.addListener) mq.addListener(applyTheme); }
+
+/* ================= TOAST ================= */
+var toastTimer;
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1800);
 }
 
-function viewSettings(){
-  const s=S.settings||{},t=s.targets||EXAMPLE_TARGETS;
-  const pc=r0(t.p*4+t.c*4+t.f*9);
-  return `<header class="top"><div><div class="eyebrow">6-week challenge</div><h1>Targets</h1></div></header>
-  ${boardHTML()}
-  <form class="card form" id="setForm">
-   <div class="grid2"><div class="field"><label for="tCal">Calories</label><input id="tCal" inputmode="numeric" type="number" value="${t.cal}"></div>
-   <div class="field"><label for="tStart">Challenge start</label><input id="tStart" type="date" value="${esc(s.start||"")}"></div></div>
-   <div class="grid4" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="field"><label for="tP" class="p">Protein (g)</label><input id="tP" type="number" inputmode="numeric" value="${t.p}"></div>
-   <div class="field"><label for="tC" class="c">Carbs (g)</label><input id="tC" type="number" inputmode="numeric" value="${t.c}"></div>
-   <div class="field"><label for="tF" class="f">Fat (g)</label><input id="tF" type="number" inputmode="numeric" value="${t.f}"></div></div>
-   <div class="field" style="max-width:12rem"><label for="tWater">Water goal (glasses)</label><input id="tWater" type="number" inputmode="numeric" value="${s.waterGoal||8}"></div>
-   <p class="note num" style="margin:0" id="macroCheck">Those macros add up to ${pc} cal (4 per gram protein and carbs, 9 per gram fat).</p>
-   <div><button class="btn" type="submit">Save targets</button></div>
-  </form>
-  <div class="card"><h2>How the day works</h2>
-   <p class="note" style="margin:0">Choose dinner each morning and its macros are set aside. Plan breakfast, lunch and snacks into what's left. If the day runs long or short, the dinner card works out the portion that lands you on budget. Log the actual food in MyFitnessPal as usual; this is your plan.</p></div>
-  ${S.mode==="local"?`<div class="card"><h2>Backup</h2>
-   <p class="note" style="margin:0">Everything saves on this phone. Copy a backup now and then and keep it in your Notes app, so you can restore it on a new phone or if you delete the app.</p>
-   <div class="row"><button class="btn small" id="backupCopy">Copy backup</button><button class="btn small ghost" id="restoreOpen">Restore</button></div>
-   <div id="restoreBox" hidden class="form"><textarea id="restoreText" rows="4" class="search" placeholder="Paste your backup here"></textarea><div><button class="btn small" id="restoreGo">Restore from backup</button></div></div></div>`:""}
-  <p class="status">${S.mode==="db"?"Saved to your account, so it's the same on your phone and computer.":"Saved on this phone."}</p>`;
+/* ================= CHALLENGE ================= */
+function challengeLabel(k){
+  var n = diffDays(S.settings.start, k) + 1;
+  if(n < 1){ var w = 1-n; return 'Challenge starts in '+w+' day'+(w===1?'':'s'); }
+  if(n > 42) return 'Challenge complete';
+  return 'Week '+Math.ceil(n/7)+' of 6 · Day '+n;
 }
 
-/* ---------- challenge board ---------- */
-let BOARD={loaded:false,days:{}};
-async function loadBoard(){
-  const st=S.settings&&S.settings.start;if(!st)return;
-  const days={};
-  if(S.mode==="db"){try{const snap=await S.db.collection("days").limit(200).get();snap.docs.forEach(d=>{days[d.id]=d.data()})}catch(e){}}
-  else{for(let i=0;i<42;i++){const k=shiftKey(st,i);const v=LS.get(dayPath(k));if(v)days[k]=v}}
-  BOARD={loaded:true,days};if(S.tab==="settings")render();
+/* ================= DINNER SUGGESTION ================= */
+function dinnerSuggestion(d){
+  if(!d.dinner || d.dinner.cal <= 0) return null;
+  var T = S.settings.targets;
+  var others = dayTotals(d, {noDinner:true});
+  var base = subM(T, others);
+  var open = openMeals(d);
+  var closing = open.length === 0;
+  var share = Math.min(90, Math.max(10, +S.settings.dinnerShare || 40)) / 100;
+  var wd = share/(1-share)*100;
+  var wOpen = open.reduce(function(s,m){ return s+WEIGHTS[m]; }, 0);
+  var frac = closing ? 1 : wd/(wd+wOpen);
+  var sides = sumEntries(d.sides);
+  var goalMain = subM(scaleM(base, frac), sides);
+  var exact = goalMain.cal / d.dinner.cal;
+  if(exact < 0.125) return {q:null, closing:closing, full:true};
+  var q = Math.max(0.25, Math.min(12, Math.round(exact*4)/4));
+  var main = scaleM(d.dinner, q);
+  var dayAfter = addM(addM(others, sides), main);
+  var dinnerAfter = addM(main, sides);
+  var hitDay = MAC.every(function(m){ return status(m, dayAfter[m]).k==='on'; });
+  return {q:q, closing:closing, main:main, dinnerAfter:dinnerAfter, dayAfter:dayAfter, hitDay:hitDay, share:Math.round(frac*100)};
 }
-function dayStatus(doc){
-  if(!doc)return "";const t=targets();const tot=add(otherTotal(doc),dinnerTotal(doc));
-  if(!tot.cal)return "";
-  const calOk=tot.cal>=t.cal*0.9&&tot.cal<=t.cal*1.05,proOk=tot.p>=t.p*0.9;
-  return calOk&&proOk?"hit":"close";
+
+/* ================= MEAL IDEAS ================= */
+function mealTarget(d, meal){
+  var left = subM(S.settings.targets, dayTotals(d));
+  var open = openMeals(d);
+  if(open.length===1 && open[0]===meal) return {t:clampM(left), left:left, closing:true};
+  var w = open.reduce(function(s,m){ return s+WEIGHTS[m]; }, 0) || 1;
+  return {t:clampM(scaleM(left, WEIGHTS[meal]/w)), left:left, closing:false};
 }
+function buildIdeas(meal, tgt, left){
+  var tol = S.settings.tol;
+  var pool = S.library.filter(function(i){ return i.cat!=='Dinners' && i.cal>0; });
+  var sides = pool.filter(function(i){ return i.cat==='Sides & Extras'; });
+  var mains = pool.filter(function(i){ return i.cat!=='Sides & Extras'; });
+  var aff = AFFINITY[meal] || [];
+  var out = [];
+  function consider(parts){
+    var sum = zero();
+    parts.forEach(function(p){ sum = addM(sum, scaleM(p.it, p.q)); });
+    var ds = devScore(sum, tgt), s = ds.s, over = false;
+    ['cal','c','f'].forEach(function(m){
+      var o = sum[m] - left[m];
+      if(o > tol[m]){ over = true; s += 25 + 5*Math.pow(o/Math.max(0.1,tol[m]), 2); }
+    });
+    if(!parts.some(function(p){ return aff.indexOf(p.it.cat) >= 0; })) s += 2;
+    if(parts.length > 1) s += 0.5;
+    var fits = !over && Math.abs(sum.cal - tgt.cal) <= Math.max(120, tgt.cal*0.4);
+    out.push({parts:parts, sum:sum, score:s, hit:ds.hit, fits:fits});
+  }
+  pool.forEach(function(it){ QTYS.forEach(function(q){ consider([{it:it,q:q}]); }); });
+  mains.forEach(function(m){ sides.forEach(function(sd){
+    QTYS.forEach(function(qm){ QTYS.forEach(function(qs){ consider([{it:m,q:qm},{it:sd,q:qs}]); }); });
+  }); });
+  out.sort(function(a,b){ return a.score-b.score; });
+  var seenCombo = {}, uniq = [];
+  out.forEach(function(o){
+    if(!o.fits) return;
+    var k = o.parts.map(function(p){ return p.it.id; }).join('+');
+    if(seenCombo[k]) return; seenCombo[k] = 1; uniq.push(o);
+  });
+  var seenMain = {}, first = [], rest = [];
+  uniq.forEach(function(o){ var m=o.parts[0].it.id; if(seenMain[m]) rest.push(o); else { seenMain[m]=1; first.push(o); } });
+  return first.concat(rest).slice(0, 30);
+}
+
+/* ================= WHOLE-DAY PLAN ================= */
+function planSig(d){
+  var t = dayTotals(d);
+  return [t.cal,t.p,t.c,t.f].join(',')+'|'+openMeals(d).join(',')+'|'+
+    S.library.map(function(i){ return i.id+':'+i.cat+':'+i.cal+':'+i.p+':'+i.c+':'+i.f; }).join(';')+'|'+
+    JSON.stringify(S.settings.targets)+JSON.stringify(S.settings.tol);
+}
+function partsFromPick(pk){
+  if(!pk) return null; var out = [];
+  for(var i=0;i<pk.length;i++){ var it = getItem(pk[i].id); if(!it) return null; out.push({it:it, q:pk[i].q}); }
+  return out;
+}
+function partsSum(parts){ return parts.reduce(function(t,p){ return addM(t, scaleM(p.it, p.q)); }, zero()); }
+function ideaKey(parts){ return parts.map(function(p){ return p.it.id+'@'+p.q; }).join('+'); }
+function toPick(parts){ return parts.map(function(p){ return {id:p.it.id, q:p.q}; }); }
+function planKey(picks, open){ return open.map(function(m){ return m+'='+(picks[m] ? picks[m].map(function(x){ return x.id+'@'+x.q; }).join('+') : '-'); }).join('|'); }
+function sumW(list){ return list.reduce(function(s,m){ return s+WEIGHTS[m]; }, 0) || 1; }
+
+function genPlan(d, avoid){
+  var open = openMeals(d), base = subM(S.settings.targets, dayTotals(d)), results = [];
+  for(var t=0; t<36; t++){
+    var picks = {}, used = {}, rem = base, sum = zero(), empty = 0;
+    for(var i=0; i<open.length; i++){
+      var m = open[i], last = i===open.length-1;
+      var tgt = clampM(last ? rem : scaleM(rem, WEIGHTS[m]/sumW(open.slice(i))));
+      var c = buildIdeas(m, tgt, rem);
+      var fresh = c.filter(function(o){ return !o.parts.some(function(p){ return used[p.it.id]; }); });
+      if(fresh.length) c = fresh;
+      if(!c.length){ empty++; continue; }
+      var n = Math.min(c.length, 6), idx = t===0 ? 0 : Math.floor(Math.pow(Math.random(), 1.6)*n);
+      var o = c[idx];
+      picks[m] = toPick(o.parts);
+      o.parts.forEach(function(p){ used[p.it.id] = 1; });
+      sum = addM(sum, o.sum); rem = subM(rem, o.sum);
+    }
+    results.push({picks:picks, score:devScore(sum, base).s + empty*50, key:planKey(picks, open)});
+  }
+  results.sort(function(a,b){ return a.score-b.score; });
+  avoid = avoid || [];
+  for(var j=0;j<results.length;j++) if(avoid.indexOf(results[j].key) < 0) return results[j];
+  return results[0];
+}
+function ensurePlan(d){
+  var sig = planSig(d);
+  if(!d.plan || d.plan.sig !== sig){
+    var r = genPlan(d, []);
+    d.plan = {sig:sig, picks:r.picks, seen:{}, seenPlans:[r.key]};
+    save();
+  }
+  return d.plan;
+}
+function mixMeal(d, meal){
+  var p = ensurePlan(d), open = openMeals(d), base = subM(S.settings.targets, dayTotals(d));
+  var others = zero(), used = {};
+  open.forEach(function(m){
+    if(m===meal) return;
+    var parts = partsFromPick(p.picks[m]);
+    if(parts){ others = addM(others, partsSum(parts)); parts.forEach(function(x){ used[x.it.id] = 1; }); }
+  });
+  var rem = subM(base, others);
+  var unpicked = open.filter(function(m){ return m===meal || !p.picks[m]; });
+  var tgt = clampM(scaleM(rem, WEIGHTS[meal]/sumW(unpicked)));
+  var c = buildIdeas(meal, tgt, rem);
+  var fresh = c.filter(function(o){ return !o.parts.some(function(x){ return used[x.it.id]; }); });
+  if(fresh.length) c = fresh;
+  var curParts = partsFromPick(p.picks[meal]), cur = curParts ? ideaKey(curParts) : '';
+  var seen = p.seen[meal] || []; if(cur && seen.indexOf(cur) < 0) seen.push(cur);
+  var next = c.filter(function(o){ return seen.indexOf(ideaKey(o.parts)) < 0; })[0];
+  if(!next){ seen = cur ? [cur] : []; next = c.filter(function(o){ return ideaKey(o.parts) !== cur; })[0]; }
+  if(!next){ toast('No other options for '+mealLabel(meal)+'. Add more foods to your library.'); return false; }
+  p.picks[meal] = toPick(next.parts); seen.push(ideaKey(next.parts)); p.seen[meal] = seen;
+  return true;
+}
+function addPlanMeal(d, meal){
+  var parts = partsFromPick(d.plan && d.plan.picks[meal]); if(!parts) return false;
+  parts.forEach(function(x){ d.meals[meal].push(makeEntry(x.it, x.q)); });
+  d.skipped[meal] = false;
+  delete d.plan.picks[meal];
+  d.plan.sig = planSig(d);
+  return true;
+}
+function projBadge(lbl, m, val){
+  var st = status(m, val), u = m==='cal' ? '' : 'g';
+  if(st.k==='on') return '<span class="st on">'+lbl+' ✓</span>';
+  return '<span class="st '+st.k+'">'+lbl+' '+fG(Math.round(st.diff))+u+' '+(st.k==='left'?'left':'over')+'</span>';
+}
+function dayPlanHTML(d, open){
+  var p = ensurePlan(d), h = '', sum = dayTotals(d), any = false;
+  open.forEach(function(m, i){
+    var parts = partsFromPick(p.picks[m]), label = mealLabel(m);
+    h += '<div class="pl'+(i===0?' first':'')+'"><div class="pl-h"><span class="mac-name">'+esc(label)+'</span></div>';
+    if(!parts){
+      h += '<div class="pl-body"><div class="pl-txt pl-none">Nothing in your library fits '+esc(label.toLowerCase())+'. Add a few go-to foods.</div>'+
+        '<button class="btn sm outline" data-act="newFor" data-meal="'+m+'">+ New</button></div></div>';
+      return;
+    }
+    any = true;
+    var ms = partsSum(parts); sum = addM(sum, ms);
+    var name = parts.map(function(x){ return '<span class="q">'+fQ(x.q)+'×</span> '+esc(x.it.name); }).join(' + ');
+    h += '<div class="pl-body"><div class="pl-txt"><div class="idea-name">'+name+'</div><div class="macline">'+macLine(ms)+'</div></div>'+
+      '<button class="mixbtn" data-act="planMix" data-meal="'+m+'" aria-label="Mix up '+esc(label)+'">'+MIX_ICON+'Mix</button>'+
+      '<button class="btn primary sm" data-act="planAdd" data-meal="'+m+'">Add</button></div></div>';
+  });
+  if(any){
+    var allHit = MAC.every(function(m){ return status(m, sum[m]).k==='on'; });
+    h += '<div class="proj"><div class="proj-t">'+(allHit?'Projected day ✓ on target':'Projected day')+'</div>'+
+      '<div class="proj-v">'+macLine(sum)+'</div><div class="proj-b">'+
+      projBadge('Cal','cal',sum.cal)+projBadge('P','p',sum.p)+projBadge('C','c',sum.c)+projBadge('F','f',sum.f)+'</div></div>'+
+      '<div class="ideas-actions"><button class="btn" data-act="planMixAll">'+MIX_ICON+'Mix up all</button>'+
+      '<button class="btn primary" data-act="planAddAll">Add all</button></div>';
+  }
+  return h;
+}
+
+/* ================= RENDER: TODAY ================= */
+function render(){
+  applyTheme();
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('active', t.dataset.tab===ui.tab); });
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.toggle('active', s.id==='screen-'+ui.tab); });
+  if(ui.tab==='today') renderToday();
+  if(ui.tab==='library') renderLibrary();
+  if(ui.tab==='targets') renderTargets();
+}
+
+function statusBadge(st, unit){
+  if(st.k==='on') return '<span class="st on">✓ on target</span>';
+  if(st.k==='left') return '<span class="st left">'+fG(Math.round(st.diff))+unit+' left</span>';
+  return '<span class="st over">'+fG(Math.round(st.diff))+unit+' over</span>';
+}
+
+function budgetHTML(d){
+  var T = S.settings.targets, tol = S.settings.tol, t = dayTotals(d), e = eatenTotals(d);
+  var calLeft = r1(T.cal - t.cal), cs = status('cal', t.cal);
+  var h = '<section class="card block budget">';
+  h += '<div class="calrow"><div><div class="bignum">'+fInt(Math.abs(calLeft))+'</div><div class="biglbl">'+(calLeft<0?'Calories over':'Calories left')+'</div></div>';
+  h += '<div class="calmeta">Planned <b>'+fInt(t.cal)+'</b> / '+fInt(T.cal)+'<div style="margin-top:6px">'+statusBadge(cs,' cal')+'</div></div></div>';
+  [['p','Protein'],['c','Carbs'],['f','Fat']].forEach(function(x){
+    var m = x[0], tg = T[m] || 1, scale = tg*1.15, st = status(m, t[m]);
+    var pct = Math.min(100, t[m]/scale*100);
+    var lo = Math.max(0,(tg-tol[m])/scale*100), hi = Math.min(100,(tg+tol[m])/scale*100);
+    h += '<div class="mac"><div class="mac-top"><span class="mac-name">'+x[1]+'</span><span class="mac-val"><b>'+fG(Math.round(t[m]))+'</b> / '+fG(tg)+'g &nbsp;'+statusBadge(st,'g')+'</span></div>';
+    h += '<div class="bar"><div class="band" style="left:'+lo+'%;width:'+(hi-lo)+'%"></div><div class="fill '+st.k+'" style="width:'+pct+'%"></div><div class="tick" style="left:calc('+(tg/scale*100)+'% - 1px)"></div></div></div>';
+  });
+  h += '<div class="eatenline">Eaten so far: '+macLine(e)+'</div></section>';
+  return h;
+}
+
+function entryHTML(e, where){
+  var m = em(e);
+  return '<div class="item'+(e.eaten?' eaten':'')+'">'+
+    '<div class="item-top"><button class="check'+(e.eaten?' on':'')+'" data-act="eat" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="Mark eaten">✓</button>'+
+    '<div class="item-name">'+esc(e.name)+(e.serving?'<span class="sv">'+esc(e.serving)+'</span>':'')+'</div>'+
+    '<button class="xmini" data-act="remove" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="Remove">&times;</button></div>'+
+    '<div class="item-bot"><div class="macline">'+macLine(m,true)+'</div>'+
+    '<div class="stepper"><button data-act="dec" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="Less">−</button><span>'+fQ(e.qty)+'</span><button data-act="inc" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="More">+</button></div></div></div>';
+}
+
+function dinnerHTML(d){
+  var h = '<section class="card dinner"><div class="card-h"><h2>Dinner</h2><span class="tag">Plan first</span></div>';
+  if(!d.dinner){
+    h += '<button class="btn primary wide" data-act="pick" data-where="dinner">+ Pick a recipe</button>';
+    h += '<p class="hint">Plan dinner first. Meal ideas for the rest of your day show up once it’s set.</p>';
+    if(d.sides.length){ h += '<div class="subhead">Sides</div>'; d.sides.forEach(function(e){ h += entryHTML(e,'sides'); }); }
+    return h + '</section>';
+  }
+  var e = d.dinner, main = em(e);
+  h += '<div class="dinner-main"><div class="item-top"><button class="check'+(e.eaten?' on':'')+'" data-act="eat" data-where="dinner" data-uid="'+e.uid+'" aria-label="Mark eaten">✓</button>'+
+    '<div class="item-name">'+esc(e.name)+(e.serving?'<span class="sv">'+esc(e.serving)+'</span>':'')+'</div>'+
+    '<button class="btn sm" data-act="pick" data-where="dinner">Change</button>'+
+    '<button class="xmini" data-act="remove" data-where="dinner" data-uid="'+e.uid+'" aria-label="Remove">&times;</button></div>'+
+    '<div class="servrow"><div class="stepper"><button data-act="dec" data-where="dinner" data-uid="'+e.uid+'">−</button><span>'+fQ(e.qty)+'</span><button data-act="inc" data-where="dinner" data-uid="'+e.uid+'">+</button></div>'+
+    '<div class="ofserv">'+(e.servings ? 'of '+fG(e.servings)+' servings' : 'servings')+'</div></div></div>';
+
+  var sg = dinnerSuggestion(d);
+  if(sg){
+    if(sg.full){
+      h += '<div class="suggest"><div class="s-txt">Your day is already full before dinner. Trim something or use a small portion.</div></div>';
+    } else {
+      var sub = sg.closing
+        ? (sg.hitDay ? 'Rounds out your day, everything lands on target ✓' : 'Closest quarter serving to round out your day')
+        : 'Dinner’s share: '+sg.share+'% of what’s left. The rest of your day is still open.';
+      var same = r2(sg.q) === r2(e.qty);
+      h += '<div class="suggest"><div class="s-txt">Suggested: <b>'+fQ(sg.q)+' serving'+(sg.q===1?'':'s')+'</b>'+
+        '<div class="s-sub">'+sub+'</div><div class="s-sub">Dinner would be '+macLine(sg.dinnerAfter)+'</div></div>'+
+        (same ? '<span class="st on">✓ Using</span>' : '<button class="btn primary sm" data-act="useSuggest" data-q="'+sg.q+'">Use '+fQ(sg.q)+'</button>')+'</div>';
+    }
+  }
+
+  h += '<div class="subhead"><span>Sides</span><button class="addbtn" data-act="pick" data-where="side">+ Add side</button></div>';
+  if(!d.sides.length) h += '<div class="empty">No sides yet (baked potato, salad, rolls…)</div>';
+  d.sides.forEach(function(s){ h += entryHTML(s,'sides'); });
+
+  var sides = sumEntries(d.sides), tot = addM(main, sides);
+  function row(lbl, m, cls){ return '<tr'+(cls?' class="'+cls+'"':'')+'><td>'+lbl+'</td><td>'+fInt(m.cal)+'</td><td>'+fG(m.p)+'</td><td>'+fG(m.c)+'</td><td>'+fG(m.f)+'</td></tr>'; }
+  h += '<table class="breakdown"><tr><th></th><th>CAL</th><th>P</th><th>C</th><th>F</th></tr>'+
+    row('Recipe', main)+row('Sides', sides)+row('Dinner total', tot, 'total')+'</table>';
+  return h + '</section>';
+}
+
+function ideasHTML(d){
+  if(!d.dinner) return '';
+  var open = openMeals(d);
+  var h = '<section class="card ideas"><div class="card-h"><h2>Meal ideas</h2><span class="tag ghost">From your library</span></div>';
+  var t = dayTotals(d);
+  var allOn = MAC.every(function(m){ return status(m, t[m]).k==='on'; });
+  if(!open.length){
+    h += '<p class="hint" style="margin:0">Every meal is planned or skipped. '+(allOn ? 'Your day lands on target ✓' : 'Nudge quantities to close it out. Check the budget at the top.')+'</p>';
+    return h + '</section>';
+  }
+  var mode = S.settings.ideaMode==='meal' ? 'meal' : 'day';
+  h += '<div class="modeseg"><button class="'+(mode==='day'?'on':'')+'" data-act="ideaMode" data-mode="day">Whole day</button>'+
+    '<button class="'+(mode==='meal'?'on':'')+'" data-act="ideaMode" data-mode="meal">One meal</button></div>';
+  if(mode==='day'){
+    if(allOn) return h + '<p class="hint" style="margin:6px 0 0">Your day is already on target. Nothing else needed today.</p></section>';
+    return h + dayPlanHTML(d, open) + '</section>';
+  }
+
+  var meal = (ui.ideaMeal && open.indexOf(ui.ideaMeal)>=0) ? ui.ideaMeal : open[0];
+  var label = mealLabel(meal);
+  h += '<div class="chips">'+open.map(function(m){ return '<button class="chip'+(m===meal?' on':'')+'" data-act="ideaMeal" data-meal="'+m+'">'+mealLabel(m)+'</button>'; }).join('')+'</div>';
+
+  if(allOn){
+    h += '<p class="hint">Your day is already on target. You don’t need '+label.toLowerCase()+' today.</p>';
+    h += '<div class="ideas-actions"><button class="btn" data-act="skip" data-meal="'+meal+'">Skip '+esc(label)+' today</button></div>';
+    ui.lastIdeas = [];
+    return h + '</section>';
+  }
+
+  var mt = mealTarget(d, meal);
+  h += '<div class="aim">'+(mt.closing?'<b>Last open meal.</b> This closes out your day.<br>':'')+
+    '<b>'+esc(label)+':</b> Aim for about <b>'+fInt(mt.t.cal)+' cal</b> · '+fG(Math.round(mt.t.p))+'P · '+fG(Math.round(mt.t.c))+'C · '+fG(Math.round(mt.t.f))+'F</div>';
+
+  var ideas = buildIdeas(meal, mt.t, mt.left);
+  if(!ideas.length){
+    ui.lastIdeas = [];
+    h += '<p class="hint">Nothing in your library fits '+esc(label.toLowerCase())+' right now. Add a few go-to '+esc(label.toLowerCase())+' foods (and some proteins or sides) so I have options to work with.</p>';
+    h += '<div class="ideas-actions"><button class="btn primary" data-act="newFor" data-meal="'+meal+'">+ New '+esc(label)+' item</button><button class="btn" data-act="skip" data-meal="'+meal+'">Skip '+esc(label)+'</button></div>';
+    return h + '</section>';
+  }
+  var pages = Math.ceil(ideas.length/3);
+  if(ui.ideaPage >= pages) ui.ideaPage = 0;
+  var shown = ideas.slice(ui.ideaPage*3, ui.ideaPage*3+3);
+  ui.lastIdeas = shown; ui.lastIdeaMeal = meal;
+  shown.forEach(function(o,i){
+    var name = o.parts.map(function(p){ return '<span class="q">'+fQ(p.q)+'×</span> '+esc(p.it.name); }).join(' + ');
+    h += '<div class="idea"'+(i===0?' style="border-top:0"':'')+'><div class="idea-txt"><div class="idea-name">'+name+(o.hit?'<span class="fitbadge">✓ on target</span>':'')+'</div>'+
+      '<div class="macline">'+macLine(o.sum)+'</div></div><button class="btn primary sm" data-act="addIdea" data-i="'+i+'">Add</button></div>';
+  });
+  h += '<div class="ideas-actions">'+(pages>1?'<button class="btn" data-act="moreIdeas">More ideas</button>':'')+
+    '<button class="btn" data-act="skip" data-meal="'+meal+'">Skip '+esc(label)+' today</button></div>';
+  return h + '</section>';
+}
+
+function mealLabel(k){ for(var i=0;i<MEALS.length;i++) if(MEALS[i].key===k) return MEALS[i].label; return k; }
+
+function mealHTML(d, m){
+  var list = d.meals[m.key], sub = sumEntries(list), skipped = !!d.skipped[m.key];
+  var h = '<section class="card"><div class="card-h"><div><h2>'+m.label+'</h2>'+
+    (list.length ? '<div class="sub">'+macLine(sub)+'</div>' : '')+'</div>'+
+    '<button class="addbtn" data-act="pick" data-where="'+m.key+'">+ Add</button></div>';
+  if(skipped && !list.length){
+    h += '<div class="skipbox"><span>Skipped today</span><button class="btn sm" data-act="unskip" data-meal="'+m.key+'">Undo</button></div>';
+  } else if(!list.length){
+    h += '<div class="empty">'+(m.key==='first'?'Nothing yet':'Not planned yet')+'</div>';
+  }
+  list.forEach(function(e){ h += entryHTML(e, m.key); });
+  return h + '</section>';
+}
+
+function renderToday(){
+  var k = ui.dayKey, d = ensureDay(k), isToday = k===todayKey();
+  var h = '<div class="topbar"><div class="challenge">'+challengeLabel(k)+'</div>'+
+    '<div class="daynav"><button class="navbtn" data-act="prevDay" aria-label="Previous day">‹</button>'+
+    '<div class="daylabel"><div class="dl-main">'+dayName(k)+'</div><div class="dl-sub">'+prettyDate(k)+'</div></div>'+
+    '<button class="navbtn" data-act="nextDay" aria-label="Next day">›</button></div>'+
+    (isToday ? '' : '<button class="btn outline sm todaylink" data-act="goToday">Back to Today</button>')+'</div>';
+  h += budgetHTML(d);
+  h += dinnerHTML(d);
+  h += ideasHTML(d);
+  MEALS.forEach(function(m){ h += mealHTML(d, m); });
+  document.getElementById('screen-today').innerHTML = h;
+}
+
+/* ================= RENDER: LIBRARY ================= */
+function renderLibrary(){
+  var h = '<div class="pagehead"><h1>Library</h1><button class="btn primary" data-act="newItem">+ New</button></div>'+
+    '<input id="libSearch" class="search" type="search" placeholder="Search your foods" autocomplete="off" value="'+esc(ui.libSearch)+'">'+
+    '<div class="chips" style="margin-top:10px">'+['All'].concat(CATS).map(function(c){ return '<button class="chip'+(ui.libCat===c?' on':'')+'" data-act="libCat" data-cat="'+esc(c)+'">'+esc(c)+'</button>'; }).join('')+'</div>'+
+    '<div id="libList"></div>';
+  document.getElementById('screen-library').innerHTML = h;
+  renderLibList();
+}
+function filterLib(cat, q){
+  q = (q||'').trim().toLowerCase();
+  return S.library.filter(function(it){
+    if(cat && cat!=='All' && it.cat!==cat) return false;
+    if(q && (it.name+' '+(it.serving||'')+' '+it.cat).toLowerCase().indexOf(q) < 0) return false;
+    return true;
+  }).sort(function(a,b){ return a.name.localeCompare(b.name); });
+}
+function renderLibList(){
+  var el = document.getElementById('libList'); if(!el) return;
+  var list = filterLib(ui.libCat, ui.libSearch);
+  var h = '<div class="libcount">'+list.length+' item'+(list.length===1?'':'s')+'</div>';
+  if(!list.length){
+    h += '<div class="card"><p class="hint" style="margin:0">'+(S.library.length<=1
+      ? 'Your library is just getting started. Tap <b>+ New</b> to add your go-to foods, proteins, sides, and dinner recipes.'
+      : 'No matches. Try another search or category, or add a new item.')+'</p></div>';
+  }
+  list.forEach(function(it){
+    h += '<button class="libitem" data-act="openItem" data-id="'+esc(it.id)+'"><div class="li-main"><div class="li-name">'+esc(it.name)+'</div>'+
+      '<div class="li-sub">'+esc(it.cat)+(it.serving?' · '+esc(it.serving):'')+(it.servings?' · makes '+fG(it.servings):'')+'</div>'+
+      '<div class="li-sub">'+fG(it.p)+'P · '+fG(it.c)+'C · '+fG(it.f)+'F</div></div>'+
+      '<div class="li-cal">'+fInt(it.cal)+'<small>cal</small></div></button>';
+  });
+  el.innerHTML = h;
+}
+
+/* ================= RENDER: TARGETS ================= */
 function boardHTML(){
-  const st=S.settings&&S.settings.start;
-  if(!st)return `<div class="card"><h2>Challenge board</h2><p class="note" style="margin:0">Add your start date below to get a 6-week board that fills in as you go.</p></div>`;
-  if(!BOARD.loaded){loadBoard();}
-  let hits=0,rows="";const tk=todayKey();
-  for(let w=0;w<6;w++){rows+=`<span class="wk">WK${w+1}</span>`;for(let d=0;d<7;d++){const k=shiftKey(st,w*7+d);const cls=dayStatus(BOARD.days[k]||(k===S.day?S.dayDoc:null));if(cls==="hit")hits++;
-    rows+=`<span class="cell ${cls} ${k===tk?"today":""}" title="${k}">${parseKey(k).getDate()}</span>`}}
-  return `<div class="card"><div class="row" style="justify-content:space-between"><h2>Challenge board</h2><span class="num" style="font-family:var(--display);font-weight:900;color:var(--accent)">${hits}/42</span></div>
-   <div class="board">${rows}</div>
-   <div class="legend"><span><i style="background:var(--accent)"></i>On target</span><span><i style="background:var(--accent-soft);outline:1.5px solid var(--accent)"></i>Planned, off target</span></div>
-   <p class="note" style="margin:0">On target means calories within 90–105% of budget and protein at least 90% of goal.</p></div>`;
-}
-
-/* ---------- sheets ---------- */
-let sheetState=null;
-function openSheet(st){sheetState=st;renderSheet()}
-function closeSheet(){sheetState=null;document.getElementById("sheetRoot").innerHTML=""}
-function renderSheet(){
-  const root=document.getElementById("sheetRoot");if(!sheetState){root.innerHTML="";return}
-  const st=sheetState;let head="",body="";
-  if(st.kind==="pick"){
-    const isDinner=st.slot==="dinner";
-    const d=S.dayDoc,t=targets(),tot=add(otherTotal(d),dinnerTotal(d));
-    const remain=isDinner?null:{cal:t.cal-tot.cal,c:t.c-tot.c,f:t.f-tot.f};
-    const cat=isDinner?"Dinners":st.cat;
-    const items=libList(cat,st.q,st.fitSort?remain:null);
-    head=`<h2>${isDinner?"Choose dinner":"Add to "+st.label}</h2>
-     <input class="search" id="pickQ" type="search" placeholder="Search" value="${esc(st.q||"")}">
-     ${isDinner?"":`<div class="chips">${["All"].concat(CATS.filter(c=>c!=="Dinners")).map(c=>`<button class="chip" data-pcat="${esc(c)}" aria-pressed="${st.cat===c}">${esc(c)}</button>`).join("")}</div>
-     <div class="row"><button class="chip" id="fitSort" aria-pressed="${!!st.fitSort}">Fits what's left first</button><span class="note num">${r0(remain.cal)} cal left</span></div>`}`;
-    body=(items.length?`<div class="entries">${items.map(i=>libItemHTML(i,"data-pick")).join("")}</div>`:`<p class="note">${isDinner?"No dinners saved yet. Add one below with the per-serving macros from MyFitnessPal.":"Nothing here yet."}</p>`)+
-      `<div class="card form"><h3 style="font-size:1rem">${isDinner?"New dinner recipe":"Quick add"}</h3>${itemFields({cat:isDinner?"Dinners":(st.cat&&st.cat!=="All"?st.cat:SLOTCAT[st.slot])},isDinner)}
-       <label class="row" style="font-size:.88rem;font-weight:600"><input type="checkbox" id="fSave" checked> Save to library</label>
-       <div><button class="btn" id="quickAdd">${isDinner?"Use for dinner":"Add"}</button></div></div>`;
-  }else if(st.kind==="edit"){
-    const it=st.item;
-    head=`<h2>${it.id?esc(it.name):"New item"}</h2>`;
-    const dl=S.day===todayKey()?"today":parseKey(S.day).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
-    const addRow=it.id?`<div class="card" style="gap:10px"><span class="eyebrow">Add to ${esc(dl)}</span><div class="row">${SLOTS.map(([k,l])=>`<button class="chip" data-addto="${k}">${l}</button>`).join("")}${it.cat==="Dinners"?`<button class="chip" data-addto="dinner">Dinner (main)</button>`:`<button class="chip" data-addto="dside">Dinner side</button>`}</div></div><span class="eyebrow">Edit</span>`:"";
-    body=`${addRow}<div class="form">${itemFields(it,true)}<div class="row"><button class="btn" id="saveItem">Save</button>${it.id?(st.confirm?`<button class="btn danger" id="delYes">Tap again to delete</button>`:`<button class="btn ghost" id="delItem">Delete</button>`):""}</div></div>`;
+  var start = S.settings.start, tk = todayKey(), hits = 0, cells = '';
+  var heads = '<div></div>';
+  for(var i=0;i<7;i++) heads += '<div class="dh">'+parseKey(addDays(start,i)).toLocaleDateString('en-US',{weekday:'narrow'})+'</div>';
+  for(var w=0; w<6; w++){
+    cells += '<div class="wk">WK'+(w+1)+'</div>';
+    for(var dd=0; dd<7; dd++){
+      var k = addDays(start, w*7+dd), cls = 'cell';
+      if(k <= tk){ if(dayHit(S.days[k])){ cls += ' hit'; hits++; } else cls += ' miss'; }
+      if(k === tk) cls += ' today';
+      cells += '<button class="'+cls+'" data-act="gotoDay" data-key="'+k+'" aria-label="'+prettyDate(k)+'">'+parseKey(k).getDate()+'</button>';
+    }
   }
-  root.innerHTML=`<div class="scrim" id="scrim"></div><div class="sheet" role="dialog" aria-modal="true"><div class="sheet-inner"><div class="sh" id="sheetHead"><div class="grab"></div><button class="iconbtn sheetx" id="sheetClose" aria-label="Close">✕</button>${head}</div><div class="sb">${body}</div></div></div>`;
+  return '<div class="card-h"><h2>Challenge board</h2><span class="tag">6 weeks</span></div>'+
+    '<div class="boardcount"><div class="bignum">'+hits+'</div><span>/42 days on target</span></div>'+
+    '<div class="board">'+heads+cells+'</div>'+
+    '<div class="legend"><span><i style="background:var(--pink)"></i>On target</span><span><i style="background:#3A3233"></i>Missed</span><span><i style="background:#2E2728;border:1px solid #4a4042"></i>Upcoming</span></div>';
 }
-const SLOTCAT={coffee:"Shakes & Coffee",breakfast:"Breakfast",lunch:"Lunch",snacks:"Snacks",post:"Shakes & Coffee",dside:"Sides & Extras"};
-function importHTML(){
-  return `<div class="import"><span style="font-weight:700;font-size:.88rem">Import from MyFitnessPal</span>
-  <span class="note">Open the recipe in MyFitnessPal, screenshot the nutrition info per serving, and pick it here. The fields below fill in for you to check.</span>
-  <label class="btn small" for="fImg">+ Choose screenshot</label><input type="file" id="fImg" accept="image/png,image/jpeg,image/webp" hidden>
-  <span class="note" id="impStatus" aria-live="polite"></span></div>`;
+function fieldN(label, path, val, step){
+  return '<div class="field"><label>'+label+'</label><input type="number" inputmode="decimal" step="'+(step||'any')+'" data-path="'+path+'" value="'+esc(val)+'"></div>';
 }
-async function importShot(file){
-  const st=document.getElementById("impStatus");
-  if(!SAMPLE||!IMG_OK){st.textContent="Reading screenshots isn't available in this view yet. Send the screenshot to Claude in your chat and it'll be added to your library for you.";return}
-  st.textContent="Reading the screenshot…";
-  try{
-    const out=await SAMPLE.json('This image is a screenshot from the MyFitnessPal app showing a recipe or food with its nutrition. Reply with ONLY a JSON object: {"name": string, "serving": string (the serving size label, e.g. "1 serving" or "1 cup"), "makes": number or null (how many servings the whole recipe makes, if shown), "cal": number, "p": number, "c": number, "f": number}. Use the values PER ONE SERVING (calories, protein g, carbohydrates g, fat g). If a value is not visible, use null.',{images:[file],modelTier:"default"});
-    const set=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null&&v!=="")el.value=v};
-    set("fName",out.name);set("fServing",out.serving);set("fCal",out.cal);set("fP",out.p);set("fC",out.c);set("fF",out.f);set("fMakes",out.makes);
-    st.textContent="Filled in. Double-check the numbers against MyFitnessPal, then save.";
-  }catch(e){
-    st.textContent=e&&e.code==="not_granted"?"Import needs permission. You can still type the numbers in.":"Couldn't read that screenshot. Try a clearer crop of the nutrition panel, or type the numbers in.";
+function renderTargets(){
+  var st = S.settings, T = st.targets, tol = st.tol;
+  var h = '<div class="pagehead"><h1>Targets</h1><span class="ver">v'+APP_VERSION+'</span></div>';
+  h += '<section class="card block" id="boardWrap">'+boardHTML()+'</section>';
+  h += '<section class="card"><div class="card-h"><h2>Daily targets</h2></div><div class="grid4">'+
+    fieldN('Calories','targets.cal',T.cal)+fieldN('Protein (g)','targets.p',T.p)+fieldN('Carbs (g)','targets.c',T.c)+fieldN('Fat (g)','targets.f',T.f)+'</div></section>';
+  h += '<section class="card"><div class="card-h"><h2>Tolerance (±)</h2></div><div class="grid4">'+
+    fieldN('Calories ±','tol.cal',tol.cal)+fieldN('Protein ±g','tol.p',tol.p)+fieldN('Carbs ±g','tol.c',tol.c)+fieldN('Fat ±g','tol.f',tol.f)+'</div>'+
+    '<p class="hint" style="margin-top:0">A day counts as on target when every macro is within these ranges.</p></section>';
+  h += '<section class="card"><div class="card-h"><h2>Dinner share</h2></div>'+fieldN('Dinner % of what’s left (while other meals are open)','dinnerShare',st.dinnerShare,1)+
+    '<p class="hint" style="margin-top:0">Used for the suggested dinner portion. Once every other meal is planned or skipped, the suggestion closes out your whole day.</p></section>';
+  h += '<section class="card"><div class="card-h"><h2>Appearance</h2></div><div class="seg">'+
+    ['auto','light','dark'].map(function(t){ return '<button class="'+(st.theme===t?'on':'')+'" data-act="theme" data-theme="'+t+'">'+t+'</button>'; }).join('')+'</div></section>';
+  h += '<section class="card"><div class="card-h"><h2>Backup &amp; restore</h2></div>'+
+    '<p class="hint" style="margin-top:0">Backup copies everything (library, days, settings) as text. Paste it in a note or email to yourself.</p>'+
+    '<button class="btn primary wide" data-act="backup">Copy backup</button>'+
+    '<div class="field" style="margin-top:12px"><label>Backup text</label><textarea id="backupText" readonly placeholder="Tap Copy backup"></textarea></div>'+
+    '<div class="divider"></div>'+
+    '<div class="field"><label>Restore: paste backup text</label><textarea id="restoreText" placeholder="Paste your backup here"></textarea></div>'+
+    '<button class="btn dark wide" data-act="restore">Restore from text</button>'+
+    '<p class="hint">Restore replaces all data on this device.</p></section>';
+  h += '<div class="footer">Macro Planner v'+APP_VERSION+' · Data is saved on this device</div>';
+  document.getElementById('screen-targets').innerHTML = h;
+}
+
+/* ================= SHEETS ================= */
+var sheet = document.getElementById('sheet'), backdrop = document.getElementById('backdrop');
+var sheetHead = document.getElementById('sheetHead'), sheetBody = document.getElementById('sheetBody');
+function openSheet(title, html){
+  document.getElementById('sheetTitle').textContent = title;
+  sheetBody.innerHTML = html;
+  sheetBody.scrollTop = 0;
+  sheet.style.transform = '';
+  sheet.classList.add('open'); backdrop.classList.add('open');
+  document.body.classList.add('noscroll');
+}
+function closeSheet(){
+  sheet.style.transition = ''; sheet.style.transform = '';
+  sheet.classList.remove('open'); backdrop.classList.remove('open');
+  document.body.classList.remove('noscroll');
+  ui.sheet = null;
+  if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
+}
+backdrop.addEventListener('click', closeSheet);
+document.addEventListener('keydown', function(e){ if(e.key==='Escape' && sheet.classList.contains('open')) closeSheet(); });
+
+var drag = null;
+sheetHead.addEventListener('pointerdown', function(e){
+  if(e.target.closest('button')) return;
+  drag = {y:e.clientY, t:Date.now(), dy:0, id:e.pointerId};
+  sheet.style.transition = 'none';
+  try { sheetHead.setPointerCapture(e.pointerId); } catch(_){}
+});
+sheetHead.addEventListener('pointermove', function(e){
+  if(!drag) return;
+  drag.dy = Math.max(0, e.clientY - drag.y);
+  sheet.style.transform = 'translateY('+drag.dy+'px)';
+});
+function endDrag(){
+  if(!drag) return;
+  var dy = drag.dy, v = dy / Math.max(1, Date.now()-drag.t);
+  drag = null; sheet.style.transition = '';
+  if(dy > 90 || (v > 0.5 && dy > 30)) closeSheet(); else sheet.style.transform = '';
+}
+sheetHead.addEventListener('pointerup', endDrag);
+sheetHead.addEventListener('pointercancel', endDrag);
+
+function whereLabel(w){ return w==='dinner'?'Dinner (main)': w==='side'?'Dinner side': mealLabel(w); }
+function openPicker(where){
+  var def = where==='dinner' ? 'Dinners' : where==='side' ? 'Sides & Extras' : 'All';
+  ui.sheet = {type:'picker', where:where, cat:def, q:''};
+  var title = where==='dinner' ? 'Pick dinner recipe' : where==='side' ? 'Add a dinner side' : 'Add to '+mealLabel(where);
+  var h = '<input id="pickSearch" class="search" type="search" placeholder="Search your library" autocomplete="off">'+
+    '<div class="chips" id="pickChips" style="margin-top:10px"></div><div id="pickList"></div>'+
+    '<button class="btn outline wide" style="margin-top:12px" data-act="newFrom">+ New item</button>';
+  openSheet(title, h);
+  renderPicker();
+}
+function renderPicker(){
+  var p = ui.sheet; if(!p || p.type!=='picker') return;
+  document.getElementById('pickChips').innerHTML = ['All'].concat(CATS).map(function(c){
+    return '<button class="chip'+(p.cat===c?' on':'')+'" data-act="pickCat" data-cat="'+esc(c)+'">'+esc(c)+'</button>'; }).join('');
+  var list = filterLib(p.cat, p.q);
+  var aff = AFFINITY[p.where] || [];
+  if(p.cat==='All' && aff.length) list.sort(function(a,b){ return (aff.indexOf(a.cat)<0) - (aff.indexOf(b.cat)<0) || a.name.localeCompare(b.name); });
+  var h = '';
+  if(!list.length) h += '<p class="hint">'+(p.cat!=='All' ? 'Nothing in '+esc(p.cat)+' yet. <button class="btn sm" data-act="pickCat" data-cat="All">Show all</button>' : 'No matches.')+'</p>';
+  list.forEach(function(it){
+    h += '<button class="pick" data-act="pickItem" data-id="'+esc(it.id)+'"><div class="li-main"><div class="li-name">'+esc(it.name)+'</div>'+
+      '<div class="li-sub">'+esc(it.serving||it.cat)+'</div><div class="li-sub">'+macLine(it)+'</div></div><span class="plus">+</span></button>';
+  });
+  document.getElementById('pickList').innerHTML = h;
+}
+
+function openItemSheet(id, opts){
+  opts = opts || {};
+  var it = id ? getItem(id) : null;
+  if(id && !it) return;
+  ui.sheet = {type:'item', id:id, thenAdd:opts.thenAdd||null};
+  var v = it || {name:'', serving:'', cat:opts.cat||'Snacks', cal:'', p:'', c:'', f:'', servings:''};
+  var h = '';
+  if(it){
+    h += '<h3 style="margin-bottom:10px">Add to '+esc(dayShort(ui.dayKey))+'</h3><div class="addgrid">'+
+      MEALS.map(function(m){ return '<button class="btn primary" data-act="addTo" data-where="'+m.key+'">'+m.label+'</button>'; }).join('')+
+      '<button class="btn dinner" data-act="addTo" data-where="dinner">Dinner (main)</button>'+
+      '<button class="btn dinner" data-act="addTo" data-where="side">Dinner side</button></div>'+
+      '<div class="divider"></div><h3 style="margin-bottom:10px">Edit item</h3>';
+  }
+  h += '<div class="field"><label>Name</label><input id="f_name" type="text" value="'+esc(v.name)+'" placeholder="e.g. Chicken burrito bowl"></div>'+
+    '<div class="field"><label>Serving description</label><input id="f_serving" type="text" value="'+esc(v.serving||'')+'" placeholder="e.g. 1 cup, 4 oz, 1 bowl"></div>'+
+    '<div class="field"><label>Category</label><select id="f_cat">'+CATS.map(function(c){ return '<option'+(c===v.cat?' selected':'')+'>'+esc(c)+'</option>'; }).join('')+'</select></div>'+
+    '<div class="grid4">'+
+    '<div class="field"><label>Calories</label><input id="f_cal" class="mf" type="number" inputmode="decimal" step="any" placeholder="auto" value="'+(it && !it.calAuto ? esc(v.cal) : '')+'"></div>'+
+    '<div class="field"><label>Protein (g)</label><input id="f_p" class="mf" type="number" inputmode="decimal" step="any" value="'+esc(v.p)+'"></div>'+
+    '<div class="field"><label>Carbs (g)</label><input id="f_c" class="mf" type="number" inputmode="decimal" step="any" value="'+esc(v.c)+'"></div>'+
+    '<div class="field"><label>Fat (g)</label><input id="f_f" class="mf" type="number" inputmode="decimal" step="any" value="'+esc(v.f)+'"></div></div>'+
+    '<div class="calc" id="calcHint"></div>'+
+    '<div class="field"><label>Recipe makes X servings (optional)</label><input id="f_serv" type="number" inputmode="decimal" step="any" value="'+esc(v.servings||'')+'" placeholder="e.g. 6"></div>'+
+    '<p class="hint" style="margin-top:-4px">Macros are per 1 serving. Leave calories blank to calculate P×4 + C×4 + F×9.</p>'+
+    '<button class="btn primary wide" style="margin-top:14px" data-act="saveItem">'+(it?'Save changes':(opts.thenAdd?'Save &amp; add to '+esc(whereLabel(opts.thenAdd)):'Save item'))+'</button>'+
+    (it ? '<button class="btn danger wide" style="margin-top:10px" data-act="deleteItem">Delete item</button>' : '');
+  openSheet(it ? it.name : 'New item', h);
+  updateCalcHint();
+}
+function updateCalcHint(){
+  var el = document.getElementById('calcHint'); if(!el) return;
+  var cal = num(document.getElementById('f_cal').value);
+  var p = num(document.getElementById('f_p').value)||0, c = num(document.getElementById('f_c').value)||0, f = num(document.getElementById('f_f').value)||0;
+  var a = autoCal(p,c,f);
+  el.textContent = cal===null ? 'Calories will be '+fG(a)+' (auto)' : (Math.abs(cal-a) > Math.max(25, a*0.15) ? 'Heads up: P/C/F add up to about '+fInt(a)+' cal' : '');
+}
+function saveItem(){
+  var s = ui.sheet; if(!s || s.type!=='item') return;
+  var name = document.getElementById('f_name').value.trim();
+  if(!name){ toast('Give it a name'); document.getElementById('f_name').focus(); return; }
+  var p = r1(num(document.getElementById('f_p').value)||0), c = r1(num(document.getElementById('f_c').value)||0), f = r1(num(document.getElementById('f_f').value)||0);
+  var calIn = num(document.getElementById('f_cal').value);
+  var serv = num(document.getElementById('f_serv').value);
+  var data = { name:name, serving:document.getElementById('f_serving').value.trim(), cat:document.getElementById('f_cat').value,
+    p:p, c:c, f:f, cal: calIn===null ? autoCal(p,c,f) : r1(calIn), calAuto: calIn===null, servings: serv && serv>0 ? r2(serv) : null };
+  var it;
+  if(s.id){
+    it = getItem(s.id); Object.assign(it, data);
+    var tk = todayKey();
+    Object.keys(S.days).forEach(function(k){
+      if(k < tk) return;
+      allEntries(S.days[k]).forEach(function(e){
+        if(e.itemId===it.id){ e.name=it.name; e.serving=it.serving; e.cat=it.cat; e.cal=it.cal; e.p=it.p; e.c=it.c; e.f=it.f; e.servings=it.servings; }
+      });
+    });
+    save(); closeSheet(); render(); toast('Saved');
+  } else {
+    it = Object.assign({id:uid()}, data);
+    S.library.push(it); save();
+    var then = s.thenAdd; closeSheet();
+    if(then) addToDay(then, it); else { render(); toast('Added to library'); }
   }
 }
-function itemFields(it,showMakes){
-  return `${importHTML()}<div class="field"><label for="fName">Name</label><input id="fName" value="${esc(it.name||"")}" placeholder="e.g. Greek yogurt + berries"></div>
-  <div class="grid2"><div class="field"><label for="fServing">Serving</label><input id="fServing" value="${esc(it.serving||"")}" placeholder="1 cup, 1 bowl…"></div>
-  <div class="field"><label for="fCat">Category</label><select id="fCat">${CATS.map(c=>`<option ${c===it.cat?"selected":""}>${c}</option>`).join("")}</select></div></div>
-  <div class="grid4"><div class="field"><label for="fCal">Cal</label><input id="fCal" type="number" inputmode="decimal" value="${it.cal??""}"></div>
-  <div class="field"><label for="fP" class="p">Protein</label><input id="fP" type="number" inputmode="decimal" value="${it.p??""}"></div>
-  <div class="field"><label for="fC" class="c">Carbs</label><input id="fC" type="number" inputmode="decimal" value="${it.c??""}"></div>
-  <div class="field"><label for="fF" class="f">Fat</label><input id="fF" type="number" inputmode="decimal" value="${it.f??""}"></div></div>
-  ${showMakes?`<div class="field"><label for="fMakes">Recipe makes (servings) · dinners only, optional</label><input id="fMakes" type="number" inputmode="numeric" value="${it.makes??""}"></div>`:""}`;
+
+/* ================= ACTIONS ================= */
+function addToDay(where, it, qty){
+  var d = ensureDay(ui.dayKey), e = makeEntry(it, qty||1);
+  if(where==='dinner') d.dinner = e;
+  else if(where==='side') d.sides.push(e);
+  else { d.meals[where].push(e); d.skipped[where] = false; }
+  ui.ideaPage = 0;
+  save(); render();
+  toast(it.name+' → '+whereLabel(where)+(ui.dayKey===todayKey()?'':' ('+dayShort(ui.dayKey)+')'));
 }
-function readFields(){
-  const v=id=>{const el=document.getElementById(id);return el?el.value:""};
-  const n=id=>{const x=parseFloat(v(id));return isFinite(x)?x:0};
-  const name=v("fName").trim();if(!name){toast("Give it a name");return null}
-  let cal=n("fCal");const p=n("fP"),c=n("fC"),f=n("fF");
-  if(!cal&&(p||c||f))cal=r0(p*4+c*4+f*9);
-  const o={name,serving:v("fServing").trim(),cat:v("fCat")||"Snacks",cal,p,c,f};
-  const mk=n("fMakes");if(mk)o.makes=mk;
-  return o;
+function listFor(d, where){ return where==='sides' ? d.sides : d.meals[where]; }
+function findEntry(d, where, id){
+  if(where==='dinner') return d.dinner && d.dinner.uid===id ? d.dinner : null;
+  var l = listFor(d, where); for(var i=0;i<l.length;i++) if(l[i].uid===id) return l[i];
+  return null;
 }
 
-/* ---------- actions ---------- */
-function curDay(){return clone(S.dayDoc||{entries:[],dinner:null})}
-function addEntry(slot,item){const d=curDay();d.entries=d.entries||[];d.entries.push({id:uid(),slot,name:item.name,cal:item.cal,p:item.p,c:item.c,f:item.f,q:1,done:false});setDay(d);toast("Added "+item.name)}
-function setDinner(item){
-  const d=curDay();d.dinner={itemId:item.id||null,name:item.name,serving:item.serving||"",makes:item.makes||null,cal:item.cal,p:item.p,c:item.c,f:item.f,q:1,done:false};
-  setDay(d);toast("Dinner set");
+var handlers = {
+  tab: function(b){ ui.tab = b.dataset.tab; render(); window.scrollTo(0,0); },
+  prevDay: function(){ ui.dayKey = addDays(ui.dayKey,-1); ui.ideaMeal=null; ui.ideaPage=0; render(); },
+  nextDay: function(){ ui.dayKey = addDays(ui.dayKey,1); ui.ideaMeal=null; ui.ideaPage=0; render(); },
+  goToday: function(){ ui.dayKey = todayKey(); ui.ideaMeal=null; ui.ideaPage=0; render(); },
+  gotoDay: function(b){ ui.dayKey = b.dataset.key; ui.tab='today'; ui.ideaMeal=null; ui.ideaPage=0; render(); window.scrollTo(0,0); },
+  pick: function(b){ openPicker(b.dataset.where); },
+  pickCat: function(b){ ui.sheet.cat = b.dataset.cat; renderPicker(); },
+  pickItem: function(b){ var it=getItem(b.dataset.id), w=ui.sheet.where; closeSheet(); if(it) addToDay(w, it); },
+  newFrom: function(){
+    var w = ui.sheet.where;
+    var cat = w==='dinner'?'Dinners': w==='side'?'Sides & Extras': w==='breakfast'?'Breakfast': w==='lunch'?'Lunch': w==='snacks'?'Snacks': 'Shakes & Coffee';
+    openItemSheet(null, {cat:cat, thenAdd:w});
+  },
+  newFor: function(b){ var m=b.dataset.meal; openItemSheet(null, {cat:m==='breakfast'?'Breakfast':m==='lunch'?'Lunch':m==='snacks'?'Snacks':'Shakes & Coffee', thenAdd:m}); },
+  inc: function(b){ step(b, 0.25); },
+  dec: function(b){ step(b, -0.25); },
+  eat: function(b){ var d=ensureDay(ui.dayKey), e=findEntry(d,b.dataset.where,b.dataset.uid); if(e){ e.eaten=!e.eaten; save(); render(); } },
+  remove: function(b){
+    var d = ensureDay(ui.dayKey), w = b.dataset.where;
+    if(w==='dinner') d.dinner = null;
+    else { var l = listFor(d,w), i = l.findIndex(function(e){ return e.uid===b.dataset.uid; }); if(i>=0) l.splice(i,1); }
+    ui.ideaPage = 0; save(); render();
+  },
+  useSuggest: function(b){ var d=ensureDay(ui.dayKey); if(d.dinner){ d.dinner.qty = r2(+b.dataset.q); save(); render(); toast('Dinner set to '+fQ(d.dinner.qty)+' servings'); } },
+  ideaMode: function(b){ S.settings.ideaMode = b.dataset.mode; save(); render(); },
+  planMix: function(b){ var d=ensureDay(ui.dayKey); if(mixMeal(d, b.dataset.meal)){ save(); render(); } },
+  planMixAll: function(){
+    var d = ensureDay(ui.dayKey), p = ensurePlan(d), open = openMeals(d);
+    var cur = planKey(p.picks, open); if(p.seenPlans.indexOf(cur) < 0) p.seenPlans.push(cur);
+    var r = genPlan(d, p.seenPlans);
+    if(p.seenPlans.indexOf(r.key) >= 0){ p.seenPlans = [cur]; r = genPlan(d, p.seenPlans); }
+    if(r.key === cur){ toast('That’s the only combo that fits. Add more foods for variety.'); return; }
+    p.picks = r.picks; p.seen = {}; p.seenPlans.push(r.key);
+    save(); render();
+  },
+  planAdd: function(b){ var d=ensureDay(ui.dayKey), m=b.dataset.meal; if(addPlanMeal(d,m)){ save(); render(); toast('Added to '+mealLabel(m)); } },
+  planAddAll: function(){
+    var d = ensureDay(ui.dayKey), n = 0;
+    openMeals(d).forEach(function(m){ if(addPlanMeal(d, m)) n++; });
+    if(n){ save(); render(); toast('Day planned ✓'); }
+  },
+  ideaMeal: function(b){ ui.ideaMeal = b.dataset.meal; ui.ideaPage = 0; render(); },
+  moreIdeas: function(){ ui.ideaPage++; render(); },
+  addIdea: function(b){
+    var o = ui.lastIdeas[+b.dataset.i], meal = ui.lastIdeaMeal; if(!o) return;
+    var d = ensureDay(ui.dayKey);
+    o.parts.forEach(function(p){ d.meals[meal].push(makeEntry(p.it, p.q)); });
+    d.skipped[meal] = false; ui.ideaMeal = null; ui.ideaPage = 0;
+    save(); render(); toast('Added to '+mealLabel(meal));
+  },
+  skip: function(b){ var d=ensureDay(ui.dayKey); d.skipped[b.dataset.meal]=true; ui.ideaMeal=null; ui.ideaPage=0; save(); render(); toast(mealLabel(b.dataset.meal)+' skipped'); },
+  unskip: function(b){ var d=ensureDay(ui.dayKey); d.skipped[b.dataset.meal]=false; save(); render(); },
+  newItem: function(){ openItemSheet(null, {cat: ui.libCat!=='All' ? ui.libCat : 'Snacks'}); },
+  openItem: function(b){ openItemSheet(b.dataset.id); },
+  libCat: function(b){ ui.libCat = b.dataset.cat; renderLibrary(); },
+  addTo: function(b){ var it=getItem(ui.sheet.id), w=b.dataset.where; closeSheet(); if(it) addToDay(w, it); },
+  saveItem: saveItem,
+  deleteItem: function(){
+    var it = getItem(ui.sheet.id); if(!it) return;
+    var msg = 'Delete "'+it.name+'" from your library? Days you already planned keep their entries.' + (it.id==='coffee' ? ' Your protein coffee will stop being added automatically.' : '');
+    if(!confirm(msg)) return;
+    S.library = S.library.filter(function(x){ return x.id!==it.id; });
+    save(); closeSheet(); render(); toast('Deleted');
+  },
+  closeSheet: closeSheet,
+  theme: function(b){ S.settings.theme = b.dataset.theme; save(); applyTheme(); renderTargets(); },
+  backup: function(){
+    var txt = JSON.stringify({app:'macro-planner', version:APP_VERSION, exported:new Date().toISOString(), data:S});
+    var ta = document.getElementById('backupText'); ta.value = txt;
+    copyText(txt, ta);
+  },
+  restore: function(){
+    var raw = document.getElementById('restoreText').value.trim();
+    if(!raw){ toast('Paste your backup text first'); return; }
+    var obj;
+    try { obj = JSON.parse(raw); } catch(e){ alert('That text isn’t a valid backup. Make sure you pasted the whole thing.'); return; }
+    var data = obj && obj.data ? obj.data : obj;
+    if(!data || !Array.isArray(data.library) || typeof data.days!=='object'){ alert('That doesn’t look like a Macro Planner backup.'); return; }
+    if(!confirm('Replace ALL data on this device with this backup? ('+data.library.length+' library items, '+Object.keys(data.days).length+' days)')) return;
+    S = normalize(data); save(); ui.dayKey = todayKey(); render(); toast('Restored ✓');
+  }
+};
+function step(b, delta){
+  var d = ensureDay(ui.dayKey), e = findEntry(d, b.dataset.where, b.dataset.uid); if(!e) return;
+  e.qty = Math.max(0.25, r2(e.qty + delta));
+  save(); render();
 }
-async function copyPrev(){
-  const k=shiftKey(S.day,-1);let prev=null;
-  if(S.mode==="db"){try{const s=await S.db.doc(dayPath(k)).get();prev=s.exists?s.data():null}catch(e){}}else prev=LS.get(dayPath(k));
-  if(!prev){toast("Nothing planned the day before");return}
-  const on=(S.settings&&S.settings.dailyOn)||{};const d=curDay();
-  (prev.entries||[]).filter(e=>!on[e.slot]).forEach(e=>d.entries.push(Object.assign({},e,{id:uid(),done:false})));
-  if(prev.dinner&&!d.dinner)d.dinner=Object.assign({},prev.dinner,{done:false});
-  setDay(d);toast("Copied");
+function copyText(txt, ta){
+  function fallback(){
+    try { ta.removeAttribute('readonly'); ta.focus(); ta.select(); ta.setSelectionRange(0, txt.length); var ok=document.execCommand('copy'); ta.setAttribute('readonly',''); toast(ok?'Backup copied ✓':'Select the text below and copy it'); }
+    catch(e){ toast('Select the text below and copy it'); }
+  }
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(txt).then(function(){ toast('Backup copied ✓ Paste it somewhere safe'); }, fallback);
+  } else fallback();
 }
-function libFind(id){return ((S.library&&S.library.items)||[]).find(i=>i.id===id)}
 
-document.addEventListener("click",e=>{
-  if(e.target.id==="scrim"){closeSheet();return}
-  const t=e.target.closest("button,[data-go]");if(!t)return;
-  if(t.id==="sheetClose"){closeSheet();return}
-  if(t.dataset.tab){S.tab=t.dataset.tab;if(S.tab==="settings")BOARD.loaded=false;closeSheet();render();window.scrollTo(0,0);return}
-  if(t.dataset.daily){const sl=t.dataset.daily;const on=Object.assign({},(S.settings&&S.settings.dailyOn)||{});on[sl]=!on[sl];
-    const daily=Object.assign({},(S.settings&&S.settings.daily)||{});if(on[sl])daily[sl]=tmpl(((S.dayDoc&&S.dayDoc.entries)||[]).filter(e=>e.slot===sl));
-    setSettings(Object.assign({},S.settings,{dailyOn:on,daily}));toast(on[sl]?"Added automatically to new days":"No longer automatic");return}
-  if(t.dataset.water){const d=curDay();const n=+t.dataset.water;d.water=(d.water||0)===n?n-1:n;setDay(d);return}
-  if(t.id==="proGap"){openSheet({kind:"pick",slot:"snacks",label:"snacks",cat:"All",q:"",fitSort:true});return}
-  if(t.id==="importItem"){openSheet({kind:"edit",item:{cat:"Dinners"}});return}
-  if(t.id==="copyYesterday"){copyPrev();return}
-  if(t.id==="backupCopy"){const out={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith("dfm:"))out[k]=localStorage.getItem(k)}}catch(_){}
-    const txt=JSON.stringify(out);navigator.clipboard.writeText(txt).then(()=>toast("Backup copied. Paste it in Notes.")).catch(()=>{document.getElementById("restoreBox").hidden=false;const ta=document.getElementById("restoreText");ta.value=txt;ta.select();toast("Select all and copy")});return}
-  if(t.id==="restoreOpen"){document.getElementById("restoreBox").hidden=false;return}
-  if(t.id==="restoreGo"){try{const o=JSON.parse(document.getElementById("restoreText").value);Object.keys(o).forEach(k=>{if(k.startsWith("dfm:"))localStorage.setItem(k,o[k])});toast("Restored");setTimeout(()=>location.reload(),600)}catch(_){toast("That doesn't look like a backup")}return}
-  if(t.dataset.go){S.tab=t.dataset.go;render();return}
-  const id=t.id;
-  if(id==="prevDay"||id==="nextDay"||id==="goToday"){S.day=id==="goToday"?todayKey():shiftKey(S.day,id==="prevDay"?-1:1);subscribeDay();render();return}
-  if(id==="pickDinner"||id==="changeDinner"){openSheet({kind:"pick",slot:"dinner",q:""});return}
-  if(id==="dMinus"||id==="dPlus"){const d=curDay();d.dinner.q=Math.max(0,Math.round((d.dinner.q+(id==="dPlus"?.25:-.25))*100)/100);setDay(d);return}
-  if(id==="useFit"){const d=curDay();d.dinner.q=fitServings(d).s;setDay(d);return}
-  if(t.dataset.add==="dside"){openSheet({kind:"pick",slot:"dside",label:"dinner",cat:"Sides & Extras",q:"",fitSort:false});return}
-  if(t.dataset.add){const sl=SLOTS.find(s=>s[0]===t.dataset.add);openSheet({kind:"pick",slot:sl[0],label:sl[1].toLowerCase(),cat:SLOTCAT[sl[0]],q:"",fitSort:true});return}
-  if(t.dataset.done){const d=curDay();const en=d.entries.find(x=>x.id===t.dataset.done);en.done=!en.done;setDay(d);return}
-  if(t.dataset.qm||t.dataset.qp){const d=curDay();const en=d.entries.find(x=>x.id===(t.dataset.qm||t.dataset.qp));const nq=Math.round((en.q+(t.dataset.qp?.5:-.5))*100)/100;if(nq<=0)d.entries=d.entries.filter(x=>x!==en);else en.q=nq;setDay(d);return}
-  if(t.dataset.libcat){S.libCat=t.dataset.libcat;render();return}
-  if(id==="newItem"||id==="newItem2"){openSheet({kind:"edit",item:{cat:S.libCat!=="All"?S.libCat:"Snacks"}});return}
-  if(t.dataset.addto){const it=libFind(sheetState.item.id)||sheetState.item;if(t.dataset.addto==="dinner")setDinner(it);else addEntry(t.dataset.addto==="dside"?"dinner":t.dataset.addto,it);closeSheet();return}
-  if(t.dataset.edit){openSheet({kind:"edit",item:clone(libFind(t.dataset.edit))});return}
-  // sheet
-  if(id==="scrim"){closeSheet();return}
-  if(t.dataset.pcat){sheetState.cat=t.dataset.pcat;renderSheet();return}
-  if(id==="fitSort"){sheetState.fitSort=!sheetState.fitSort;renderSheet();return}
-  if(t.dataset.pick){const it=libFind(t.dataset.pick);if(sheetState.slot==="dinner")setDinner(it);else addEntry(sheetState.slot==="dside"?"dinner":sheetState.slot,it);closeSheet();return}
-  if(id==="quickAdd"){const o=readFields();if(!o)return;if(document.getElementById("fSave").checked){o.id=uid();setLibrary(((S.library&&S.library.items)||[]).concat([o]))}
-    if(sheetState.slot==="dinner")setDinner(o);else addEntry(sheetState.slot==="dside"?"dinner":sheetState.slot,o);closeSheet();return}
-  if(id==="saveItem"){const o=readFields();if(!o)return;const items=((S.library&&S.library.items)||[]).slice();
-    if(sheetState.item.id){o.id=sheetState.item.id;const ix=items.findIndex(i=>i.id===o.id);items[ix]=o}else{o.id=uid();items.push(o)}
-    setLibrary(items);closeSheet();toast("Saved");return}
-  if(id==="delItem"){sheetState.confirm=true;renderSheet();return}
-  if(id==="delYes"){setLibrary(S.library.items.filter(i=>i.id!==sheetState.item.id));closeSheet();toast("Deleted");return}
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-act]'); if(!b) return;
+  var fn = handlers[b.dataset.act]; if(fn){ e.preventDefault(); fn(b); }
 });
-let swipeY=null;
-document.addEventListener("touchstart",e=>{if(e.target.closest("#sheetHead")&&!e.target.closest("input,button"))swipeY=e.touches[0].clientY},{passive:true});
-document.addEventListener("touchmove",e=>{if(swipeY==null)return;const dy=e.touches[0].clientY-swipeY;const sh=document.querySelector(".sheet");if(sh&&dy>0)sh.style.transform="translateY("+dy+"px)"},{passive:true});
-document.addEventListener("touchend",e=>{if(swipeY==null)return;const dy=e.changedTouches[0].clientY-swipeY;swipeY=null;const sh=document.querySelector(".sheet");if(dy>80)closeSheet();else if(sh)sh.style.transform=""});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&sheetState)closeSheet()});
-document.addEventListener("change",e=>{
-  if(e.target.id==="fImg"&&e.target.files&&e.target.files[0]){importShot(e.target.files[0]);e.target.value=""}
-  if(e.target.id==="dDone"){const d=curDay();d.dinner.done=e.target.checked;setDay(d)}
+document.addEventListener('input', function(e){
+  var t = e.target;
+  if(t.id==='libSearch'){ ui.libSearch = t.value; renderLibList(); }
+  else if(t.id==='pickSearch' && ui.sheet){ ui.sheet.q = t.value; renderPicker(); }
+  else if(t.classList && t.classList.contains('mf')) updateCalcHint();
 });
-document.addEventListener("input",e=>{
-  if(e.target.id==="libQ"){S.libQ=e.target.value;const pos=e.target.selectionStart;render();const el=document.getElementById("libQ");el.focus();try{el.setSelectionRange(pos,pos)}catch(_){}}
-  if(e.target.id==="pickQ"){sheetState.q=e.target.value;const pos=e.target.selectionStart;renderSheet();const el=document.getElementById("pickQ");el.focus();try{el.setSelectionRange(pos,pos)}catch(_){}}
-  if(["tP","tC","tF"].includes(e.target.id)){const g=id=>parseFloat(document.getElementById(id).value)||0;document.getElementById("macroCheck").textContent=`Those macros add up to ${r0(g("tP")*4+g("tC")*4+g("tF")*9)} cal (4 per gram protein and carbs, 9 per gram fat).`}
+document.addEventListener('change', function(e){
+  var t = e.target, path = t.dataset && t.dataset.path; if(!path) return;
+  var v = num(t.value);
+  if(v===null || v<0){ toast('Enter a number'); renderTargets(); return; }
+  var parts = path.split('.');
+  if(parts.length===2) S.settings[parts[0]][parts[1]] = r1(v);
+  else S.settings[parts[0]] = r1(v);
+  save();
+  var bw = document.getElementById('boardWrap'); if(bw) bw.innerHTML = boardHTML();
+  toast('Saved');
 });
-document.addEventListener("submit",e=>{
-  if(e.target.id!=="setForm")return;e.preventDefault();
-  const g=id=>parseFloat(document.getElementById(id).value)||0;
-  setSettings(Object.assign({},S.settings,{targets:{cal:g("tCal"),p:g("tP"),c:g("tC"),f:g("tF")},start:document.getElementById("tStart").value||null,example:false,waterGoal:g("tWater")||8}));
-  toast("Targets saved");
+
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState!=='visible') return;
+  var tk = todayKey();
+  if(tk !== ui.lastToday){ if(ui.dayKey===ui.lastToday) ui.dayKey = tk; ui.lastToday = tk; render(); }
 });
-boot();
+
+render();
 })();
 </script>
-
-</body></html>
+</body>
+</html>
