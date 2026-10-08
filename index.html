@@ -109,6 +109,10 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
 .stepper button{width:44px;height:44px;border:0;background:transparent;font-size:22px;font-weight:700;color:var(--pink)}
 .stepper span{min-width:44px;text-align:center;font-weight:800;font-size:15px}
 .empty{font-size:14px;color:var(--muted);padding:6px 0 2px}
+.row-btns{display:flex;align-items:center;gap:6px}
+.emptyrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.linkbtn{min-height:40px;padding:0 4px;border:0;background:transparent;color:var(--pink);font:700 14px var(--body)}
+.addslot{display:block;margin-top:8px}
 .skipbox{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--chip);border-radius:14px;padding:10px 12px;font-size:14px;color:var(--muted)}
 .addbtn{min-height:44px;padding:0 14px;border-radius:12px;border:2px solid var(--pink);background:transparent;color:var(--pink);font:800 12px var(--head);text-transform:uppercase;letter-spacing:.06em}
 
@@ -258,7 +262,7 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
 'use strict';
 
 /* ================= CONSTANTS ================= */
-var APP_VERSION = '1.2.0';
+var APP_VERSION = '1.3.0';
 var KEY = 'macroPlanner.v1';
 var MAC = ['cal','p','c','f'];
 var MEALS = [
@@ -270,14 +274,28 @@ var MEALS = [
 ];
 var PLAN_MEALS = ['breakfast','lunch','snacks','post'];
 var WEIGHTS = {breakfast:32, lunch:36, snacks:22, post:10};
+var EXTRA_SNACK_W = 14, MAX_SNACKS = 4;
+function isSnack(k){ return k==='snacks' || /^snacks\d+$/.test(k); }
+function wt(k){ return isSnack(k) && k!=='snacks' ? EXTRA_SNACK_W : (WEIGHTS[k]||10); }
+function affOf(k){ return AFFINITY[isSnack(k) ? 'snacks' : k] || []; }
+function extrasOf(d){ return (d && d.extraSnacks) || []; }
+function planKeys(d){ return ['breakfast','lunch','snacks'].concat(extrasOf(d)).concat(['post']); }
+function mealsOf(d){
+  var multi = extrasOf(d).length > 0;
+  return [{key:'first',label:'First Thing'},{key:'breakfast',label:'Breakfast'},{key:'lunch',label:'Lunch'},
+    {key:'snacks',label:multi?'Snack 1':'Snacks'}]
+    .concat(extrasOf(d).map(function(k){ return {key:k, label:mealLabel(k)}; }))
+    .concat([{key:'post',label:'Post-Workout'}]);
+}
 var CATS = ['Shakes & Coffee','Breakfast','Lunch','Snacks','Proteins','Sides & Extras','Dinners'];
 var AFFINITY = {
   breakfast:['Breakfast','Shakes & Coffee','Proteins'],
   lunch:['Lunch','Proteins'],
-  snacks:['Snacks','Shakes & Coffee','Proteins'],
-  post:['Shakes & Coffee','Snacks','Proteins']
+  snacks:['Snacks','Shakes & Coffee'],
+  post:['Shakes & Coffee','Snacks']
 };
-var QTYS = [0.5, 1, 1.5, 2];
+var QTYS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3];
+var SIDE_QTYS = [0.5, 1, 1.5, 2];
 var SCORE_W = {cal:1.5, p:1.2, c:1, f:1};
 var COFFEE = {id:'coffee', name:'Protein Coffee', serving:'1 scoop Optimum Nutrition Gold Standard Whey (Vanilla Ice Cream) in coffee',
   cat:'Shakes & Coffee', cal:125, p:24, c:4, f:1.5, servings:null, calAuto:false};
@@ -324,7 +342,7 @@ function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(
 function defaultState(){
   return {
     schema:1,
-    settings:{ targets:{cal:1618,p:142,c:141,f:54}, tol:{cal:50,p:5,c:8,f:4}, start:'2026-10-18', dinnerShare:40, theme:'auto', ideaMode:'day' },
+    settings:{ targets:{cal:1618,p:142,c:141,f:54}, tol:{cal:50,p:5,c:8,f:4}, start:'2026-10-18', dinnerShare:40, theme:'auto', ideaMode:'day', snackSlots:1, postDefault:true },
     library:[JSON.parse(JSON.stringify(COFFEE))],
     days:{}
   };
@@ -347,6 +365,8 @@ function normalize(o){
     day.meals = Object.assign({first:[],breakfast:[],lunch:[],snacks:[],post:[]}, day.meals||{});
     day.sides = Array.isArray(day.sides) ? day.sides : [];
     day.skipped = day.skipped || {};
+    day.extraSnacks = Array.isArray(day.extraSnacks) ? day.extraSnacks : [];
+    day.extraSnacks.forEach(function(k){ if(!Array.isArray(day.meals[k])) day.meals[k] = []; });
     if(day.dinner===undefined) day.dinner = null;
     s.days[k] = day;
   });
@@ -369,7 +389,10 @@ function getItem(id){ for(var i=0;i<S.library.length;i++) if(S.library[i].id===i
 function ensureDay(k){
   var d = S.days[k];
   if(!d){
-    d = { dinner:null, sides:[], meals:{first:[],breakfast:[],lunch:[],snacks:[],post:[]}, skipped:{} };
+    d = { dinner:null, sides:[], meals:{first:[],breakfast:[],lunch:[],snacks:[],post:[]}, skipped:{}, extraSnacks:[] };
+    var ns = Math.max(1, Math.min(MAX_SNACKS, Math.round(+S.settings.snackSlots || 1)));
+    for(var si=2; si<=ns; si++){ d.extraSnacks.push('snacks'+si); d.meals['snacks'+si] = []; }
+    if(S.settings.postDefault === false) d.skipped.post = true;
     var cof = getItem('coffee');
     if(cof) d.meals.first.push(makeEntry(cof,1));
     S.days[k] = d;
@@ -386,7 +409,7 @@ function sumEntries(list){ return list.reduce(function(t,e){ return addM(t, em(e
 function allEntries(d){
   var a = []; if(d.dinner) a.push(d.dinner);
   a = a.concat(d.sides);
-  MEALS.forEach(function(m){ a = a.concat(d.meals[m.key]); });
+  Object.keys(d.meals).forEach(function(k){ a = a.concat(d.meals[k]||[]); });
   return a;
 }
 function dayTotals(d, opt){
@@ -394,11 +417,11 @@ function dayTotals(d, opt){
   var t = zero();
   if(d.dinner && !opt.noDinner) t = addM(t, em(d.dinner));
   if(!opt.noDinner) t = addM(t, sumEntries(d.sides));
-  MEALS.forEach(function(m){ t = addM(t, sumEntries(d.meals[m.key])); });
+  Object.keys(d.meals).forEach(function(k){ t = addM(t, sumEntries(d.meals[k]||[])); });
   return t;
 }
 function eatenTotals(d){ return sumEntries(allEntries(d).filter(function(e){ return e.eaten; })); }
-function openMeals(d){ return PLAN_MEALS.filter(function(m){ return !d.skipped[m] && d.meals[m].length===0; }); }
+function openMeals(d){ return planKeys(d).filter(function(m){ return !d.skipped[m] && (d.meals[m]||[]).length===0; }); }
 
 function status(m, planned){
   var T = S.settings.targets[m], tol = S.settings.tol[m];
@@ -456,7 +479,7 @@ function dinnerSuggestion(d){
   var closing = open.length === 0;
   var share = Math.min(90, Math.max(10, +S.settings.dinnerShare || 40)) / 100;
   var wd = share/(1-share)*100;
-  var wOpen = open.reduce(function(s,m){ return s+WEIGHTS[m]; }, 0);
+  var wOpen = open.reduce(function(s,m){ return s+wt(m); }, 0);
   var frac = closing ? 1 : wd/(wd+wOpen);
   var sides = sumEntries(d.sides);
   var goalMain = subM(scaleM(base, frac), sides);
@@ -475,28 +498,42 @@ function mealTarget(d, meal){
   var left = subM(S.settings.targets, dayTotals(d));
   var open = openMeals(d);
   if(open.length===1 && open[0]===meal) return {t:clampM(left), left:left, closing:true};
-  var w = open.reduce(function(s,m){ return s+WEIGHTS[m]; }, 0) || 1;
-  return {t:clampM(scaleM(left, WEIGHTS[meal]/w)), left:left, closing:false};
+  var w = open.reduce(function(s,m){ return s+wt(m); }, 0) || 1;
+  return {t:clampM(scaleM(left, wt(meal)/w)), left:left, closing:false};
 }
 var comboCache = {sig:null, byMeal:{}};
 function libSig(){ return S.library.map(function(i){ return i.id+':'+i.cat+':'+i.cal+':'+i.p+':'+i.c+':'+i.f; }).join(';'); }
 function combosFor(meal){
   var sig = libSig();
   if(comboCache.sig !== sig) comboCache = {sig:sig, byMeal:{}};
+  meal = isSnack(meal) ? 'snacks' : meal;
   if(comboCache.byMeal[meal]) return comboCache.byMeal[meal];
-  var pool = S.library.filter(function(i){ return i.cat!=='Dinners' && i.cal>0 && i.id!=='coffee'; });
+  var pool = S.library.filter(function(i){
+    if(i.cat==='Dinners' || i.cal<=0 || i.id==='coffee') return false;
+    if(i.cat==='Breakfast' && meal!=='breakfast') return false;
+    if(i.cat==='Lunch' && meal!=='lunch') return false;
+    return true;
+  });
   var sides = pool.filter(function(i){ return i.cat==='Sides & Extras'; });
   var mains = pool.filter(function(i){ return i.cat!=='Sides & Extras'; });
-  var aff = AFFINITY[meal] || [], list = [];
+  var aff = affOf(meal), list = [];
   function push(parts){
     var sum = zero();
     parts.forEach(function(p){ sum = addM(sum, scaleM(p.it, p.q)); });
-    var pen = (parts.some(function(p){ return aff.indexOf(p.it.cat) >= 0; }) ? 0 : 2) + (parts.length > 1 ? 0.5 : 0);
+    var pen = (parts.some(function(p){ return aff.indexOf(p.it.cat) >= 0; }) ? 0 : 6) + (parts.length > 1 ? 0.5 : 0) +
+      parts.reduce(function(a,p){ return a + (p.it.cat==='Sides & Extras' || aff.indexOf(p.it.cat) >= 0 ? 0 : 4); }, 0) +
+      parts.reduce(function(a,p){ return a + (p.q===1 ? 0 : (p.q%0.5===0 ? 0.08 : 0.15)); }, 0);
     list.push({parts:parts, sum:sum, pen:pen});
   }
   pool.forEach(function(it){ QTYS.forEach(function(q){ push([{it:it,q:q}]); }); });
   mains.forEach(function(m){ sides.forEach(function(sd){
-    QTYS.forEach(function(qm){ QTYS.forEach(function(qs){ push([{it:m,q:qm},{it:sd,q:qs}]); }); });
+    QTYS.forEach(function(qm){ SIDE_QTYS.forEach(function(qs){ push([{it:m,q:qm},{it:sd,q:qs}]); }); });
+  }); });
+  // protein + a meal item (e.g. chicken + rice cup for lunch), both portions flexible
+  var prots = mains.filter(function(i){ return i.cat==='Proteins' && aff.indexOf('Proteins')>=0; });
+  var partners = mains.filter(function(i){ return i.cat!=='Proteins' && aff.indexOf(i.cat)>=0 && i.cat!=='Shakes & Coffee'; });
+  prots.forEach(function(pr){ partners.forEach(function(pt){
+    QTYS.forEach(function(qa){ SIDE_QTYS.forEach(function(qb){ push([{it:pr,q:qa},{it:pt,q:qb}]); }); });
   }); });
   comboCache.byMeal[meal] = list;
   return list;
@@ -541,15 +578,15 @@ function partsSum(parts){ return parts.reduce(function(t,p){ return addM(t, scal
 function ideaKey(parts){ return parts.map(function(p){ return p.it.id+'@'+p.q; }).join('+'); }
 function toPick(parts){ return parts.map(function(p){ return {id:p.it.id, q:p.q}; }); }
 function planKey(picks, open){ return open.map(function(m){ return m+'='+(picks[m] ? picks[m].map(function(x){ return x.id+'@'+x.q; }).join('+') : '-'); }).join('|'); }
-function sumW(list){ return list.reduce(function(s,m){ return s+WEIGHTS[m]; }, 0) || 1; }
+function sumW(list){ return list.reduce(function(s,m){ return s+wt(m); }, 0) || 1; }
 
 function genPlan(d, avoid){
   var open = openMeals(d), base = subM(S.settings.targets, dayTotals(d)), results = [];
   for(var t=0; t<20; t++){
-    var picks = {}, used = {}, rem = base, sum = zero(), empty = 0;
+    var picks = {}, used = {}, rem = base, sum = zero(), empty = 0, fitPen = 0;
     for(var i=0; i<open.length; i++){
       var m = open[i], last = i===open.length-1;
-      var tgt = clampM(last ? rem : scaleM(rem, WEIGHTS[m]/sumW(open.slice(i))));
+      var tgt = clampM(last ? rem : scaleM(rem, wt(m)/sumW(open.slice(i))));
       var c = buildIdeas(m, tgt, rem);
       var fresh = c.filter(function(o){ return !o.parts.some(function(p){ return used[p.it.id]; }); });
       if(fresh.length) c = fresh;
@@ -558,9 +595,9 @@ function genPlan(d, avoid){
       var o = c[idx];
       picks[m] = toPick(o.parts);
       o.parts.forEach(function(p){ used[p.it.id] = 1; });
-      sum = addM(sum, o.sum); rem = subM(rem, o.sum);
+      sum = addM(sum, o.sum); rem = subM(rem, o.sum); fitPen += o.score*0.25;
     }
-    results.push({picks:picks, score:devScore(sum, base).s + empty*50, key:planKey(picks, open)});
+    results.push({picks:picks, score:devScore(sum, base).s + empty*50 + fitPen, key:planKey(picks, open)});
   }
   results.sort(function(a,b){ return a.score-b.score; });
   avoid = avoid || [];
@@ -586,7 +623,7 @@ function mixMeal(d, meal){
   });
   var rem = subM(base, others);
   var unpicked = open.filter(function(m){ return m===meal || !p.picks[m]; });
-  var tgt = clampM(scaleM(rem, WEIGHTS[meal]/sumW(unpicked)));
+  var tgt = clampM(scaleM(rem, wt(meal)/sumW(unpicked)));
   var c = buildIdeas(meal, tgt, rem);
   var fresh = c.filter(function(o){ return !o.parts.some(function(x){ return used[x.it.id]; }); });
   if(fresh.length) c = fresh;
@@ -778,19 +815,28 @@ function ideasHTML(d){
   return h + '</section>';
 }
 
-function mealLabel(k){ for(var i=0;i<MEALS.length;i++) if(MEALS[i].key===k) return MEALS[i].label; return k; }
+function mealLabel(k){
+  var mm = /^snacks(\d+)$/.exec(k); if(mm) return 'Snack '+mm[1];
+  for(var i=0;i<MEALS.length;i++) if(MEALS[i].key===k) return MEALS[i].label; return k;
+}
 
 function mealHTML(d, m){
-  var list = d.meals[m.key], sub = sumEntries(list), skipped = !!d.skipped[m.key];
-  var h = '<section class="card"><div class="card-h"><div><h2>'+m.label+'</h2>'+
-    (list.length ? '<div class="sub">'+macLine(sub)+'</div>' : '')+'</div>'+
-    '<button class="addbtn" data-act="pick" data-where="'+m.key+'">+ Add</button></div>';
+  var list = d.meals[m.key] || [], sub = sumEntries(list), skipped = !!d.skipped[m.key];
+  var extra = extrasOf(d).indexOf(m.key) >= 0, plan = planKeys(d).indexOf(m.key) >= 0;
+  var h = '<section class="card"><div class="card-h"><div><h2>'+esc(m.label)+'</h2>'+
+    (list.length ? '<div class="sub">'+macLine(sub)+'</div>' : '')+'</div><div class="row-btns">';
+  if(!list.length && extra) h += '<button class="xmini" data-act="removeSnack" data-meal="'+m.key+'" aria-label="Remove this snack slot">&times;</button>';
+  if(!skipped) h += '<button class="addbtn" data-act="pick" data-where="'+m.key+'">+ Add</button>';
+  h += '</div></div>';
   if(skipped && !list.length){
-    h += '<div class="skipbox"><span>Skipped today</span><button class="btn sm" data-act="unskip" data-meal="'+m.key+'">Undo</button></div>';
+    h += '<div class="skipbox"><span>'+(m.key==='post'?'No post-workout today':'Skipped today')+'</span><button class="btn sm" data-act="unskip" data-meal="'+m.key+'">Undo</button></div>';
   } else if(!list.length){
-    h += '<div class="empty">'+(m.key==='first'?'Nothing yet':'Not planned yet')+'</div>';
+    h += '<div class="emptyrow"><span class="empty">'+(m.key==='first'?'Nothing yet':'Not planned yet')+'</span>'+
+      (plan && !extra ? '<button class="linkbtn" data-act="skip" data-meal="'+m.key+'">'+(m.key==='post'?'Not today':'Skip today')+'</button>' : '')+'</div>';
   }
   list.forEach(function(e){ h += entryHTML(e, m.key); });
+  var lastSnack = extrasOf(d).length ? extrasOf(d)[extrasOf(d).length-1] : 'snacks';
+  if(m.key===lastSnack && 1+extrasOf(d).length < MAX_SNACKS) h += '<button class="linkbtn addslot" data-act="addSnack">+ Add another snack</button>';
   return h + '</section>';
 }
 
@@ -804,7 +850,7 @@ function renderToday(){
   h += budgetHTML(d);
   h += dinnerHTML(d);
   h += ideasHTML(d);
-  MEALS.forEach(function(m){ h += mealHTML(d, m); });
+  mealsOf(d).forEach(function(m){ h += mealHTML(d, m); });
   document.getElementById('screen-today').innerHTML = h;
 }
 
@@ -875,6 +921,12 @@ function renderTargets(){
   h += '<section class="card"><div class="card-h"><h2>Tolerance (±)</h2></div><div class="grid4">'+
     fieldN('Calories ±','tol.cal',tol.cal)+fieldN('Protein ±g','tol.p',tol.p)+fieldN('Carbs ±g','tol.c',tol.c)+fieldN('Fat ±g','tol.f',tol.f)+'</div>'+
     '<p class="hint" style="margin-top:0">A day counts as on target when every macro is within these ranges.</p></section>';
+  h += '<section class="card"><div class="card-h"><h2>New day setup</h2></div>'+
+    fieldN('Snack slots on new days (1–4)','snackSlots',st.snackSlots||1,1)+
+    '<div class="field"><label>Post-workout on new days</label><div class="seg">'+
+    '<button class="'+(st.postDefault!==false?'on':'')+'" data-act="postDefault" data-v="1">Include</button>'+
+    '<button class="'+(st.postDefault===false?'on':'')+'" data-act="postDefault" data-v="0">Leave off</button></div></div>'+
+    '<p class="hint" style="margin-top:0">Applies to days you haven’t opened yet. You can still add a snack or skip post-workout on any day.</p></section>';
   h += '<section class="card"><div class="card-h"><h2>Dinner share</h2></div>'+fieldN('Dinner % of what’s left (while other meals are open)','dinnerShare',st.dinnerShare,1)+
     '<p class="hint" style="margin-top:0">Used for the suggested dinner portion. Once every other meal is planned or skipped, the suggestion closes out your whole day.</p></section>';
   h += '<section class="card"><div class="card-h"><h2>Appearance</h2></div><div class="seg">'+
@@ -949,7 +1001,7 @@ function renderPicker(){
   document.getElementById('pickChips').innerHTML = ['All'].concat(CATS).map(function(c){
     return '<button class="chip'+(p.cat===c?' on':'')+'" data-act="pickCat" data-cat="'+esc(c)+'">'+esc(c)+'</button>'; }).join('');
   var list = filterLib(p.cat, p.q);
-  var aff = AFFINITY[p.where] || [];
+  var aff = affOf(p.where);
   if(p.cat==='All' && aff.length) list.sort(function(a,b){ return (aff.indexOf(a.cat)<0) - (aff.indexOf(b.cat)<0) || a.name.localeCompare(b.name); });
   var h = '';
   if(!list.length) h += '<p class="hint">'+(p.cat!=='All' ? 'Nothing in '+esc(p.cat)+' yet. <button class="btn sm" data-act="pickCat" data-cat="All">Show all</button>' : 'No matches.')+'</p>';
@@ -969,7 +1021,7 @@ function openItemSheet(id, opts){
   var h = '';
   if(it){
     h += '<h3 style="margin-bottom:10px">Add to '+esc(dayShort(ui.dayKey))+'</h3><div class="addgrid">'+
-      MEALS.map(function(m){ return '<button class="btn primary" data-act="addTo" data-where="'+m.key+'">'+m.label+'</button>'; }).join('')+
+      mealsOf(ensureDay(ui.dayKey)).map(function(m){ return '<button class="btn primary" data-act="addTo" data-where="'+m.key+'">'+esc(m.label)+'</button>'; }).join('')+
       '<button class="btn dinner" data-act="addTo" data-where="dinner">Dinner (main)</button>'+
       '<button class="btn dinner" data-act="addTo" data-where="side">Dinner side</button></div>'+
       '<div class="divider"></div><h3 style="margin-bottom:10px">Edit item</h3>';
@@ -1053,10 +1105,25 @@ var handlers = {
   pickItem: function(b){ var it=getItem(b.dataset.id), w=ui.sheet.where; closeSheet(); if(it) addToDay(w, it); },
   newFrom: function(){
     var w = ui.sheet.where;
-    var cat = w==='dinner'?'Dinners': w==='side'?'Sides & Extras': w==='breakfast'?'Breakfast': w==='lunch'?'Lunch': w==='snacks'?'Snacks': 'Shakes & Coffee';
+    var cat = w==='dinner'?'Dinners': w==='side'?'Sides & Extras': w==='breakfast'?'Breakfast': w==='lunch'?'Lunch': isSnack(w)?'Snacks': 'Shakes & Coffee';
     openItemSheet(null, {cat:cat, thenAdd:w});
   },
-  newFor: function(b){ var m=b.dataset.meal; openItemSheet(null, {cat:m==='breakfast'?'Breakfast':m==='lunch'?'Lunch':m==='snacks'?'Snacks':'Shakes & Coffee', thenAdd:m}); },
+  newFor: function(b){ var m=b.dataset.meal; openItemSheet(null, {cat:m==='breakfast'?'Breakfast':m==='lunch'?'Lunch':isSnack(m)?'Snacks':'Shakes & Coffee', thenAdd:m}); },
+  addSnack: function(){
+    var d = ensureDay(ui.dayKey), n = 2; d.extraSnacks = extrasOf(d);
+    while(d.extraSnacks.indexOf('snacks'+n) >= 0) n++;
+    if(1 + d.extraSnacks.length >= MAX_SNACKS) return;
+    var k = 'snacks'+n; d.extraSnacks.push(k); d.meals[k] = [];
+    ui.ideaPage = 0; save(); render(); toast(mealLabel(k)+' added');
+  },
+  removeSnack: function(b){
+    var d = ensureDay(ui.dayKey), k = b.dataset.meal;
+    if((d.meals[k]||[]).length) return;
+    d.extraSnacks = extrasOf(d).filter(function(x){ return x!==k; });
+    delete d.meals[k]; delete d.skipped[k];
+    if(d.plan && d.plan.picks) delete d.plan.picks[k];
+    ui.ideaPage = 0; save(); render();
+  },
   inc: function(b){ step(b, 0.25); },
   dec: function(b){ step(b, -0.25); },
   eat: function(b){ var d=ensureDay(ui.dayKey), e=findEntry(d,b.dataset.where,b.dataset.uid); if(e){ e.eaten=!e.eaten; save(); render(); } },
@@ -1108,6 +1175,7 @@ var handlers = {
     save(); closeSheet(); render(); toast('Deleted');
   },
   closeSheet: closeSheet,
+  postDefault: function(b){ S.settings.postDefault = b.dataset.v==='1'; save(); renderTargets(); toast('Saved'); },
   theme: function(b){ S.settings.theme = b.dataset.theme; save(); applyTheme(); renderTargets(); },
   backup: function(){
     var txt = JSON.stringify({app:'macro-planner', version:APP_VERSION, exported:new Date().toISOString(), data:S});
@@ -1156,7 +1224,7 @@ document.addEventListener('change', function(e){
   if(v===null || v<0){ toast('Enter a number'); renderTargets(); return; }
   var parts = path.split('.');
   if(parts.length===2) S.settings[parts[0]][parts[1]] = r1(v);
-  else S.settings[parts[0]] = r1(v);
+  else S.settings[parts[0]] = path==='snackSlots' ? Math.max(1, Math.min(MAX_SNACKS, Math.round(v))) : r1(v);
   save();
   var bw = document.getElementById('boardWrap'); if(bw) bw.innerHTML = boardHTML();
   toast('Saved');
