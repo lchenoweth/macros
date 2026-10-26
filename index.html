@@ -230,6 +230,7 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
 .pick .plus{font:900 22px var(--head);color:var(--pink)}
 .toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,20px);z-index:60;background:var(--ink);color:#fff;border:1px solid var(--pink);padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:all .2s;max-width:88vw;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+.sharerow{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:-4px 0 10px}
 </style>
 </head>
 <body>
@@ -262,7 +263,7 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
 'use strict';
 
 /* ================= CONSTANTS ================= */
-var APP_VERSION = '1.3.0';
+var APP_VERSION = '1.5.0';
 var KEY = 'macroPlanner.v1';
 var MAC = ['cal','p','c','f'];
 var MEALS = [
@@ -501,64 +502,63 @@ function mealTarget(d, meal){
   var w = open.reduce(function(s,m){ return s+wt(m); }, 0) || 1;
   return {t:clampM(scaleM(left, wt(meal)/w)), left:left, closing:false};
 }
-var comboCache = {sig:null, byMeal:{}};
+var comboCache = {sig:null, data:null};
+var PAIR_QTYS = [0.5, 0.75, 1, 1.25, 1.5, 2];
 function libSig(){ return S.library.map(function(i){ return i.id+':'+i.cat+':'+i.cal+':'+i.p+':'+i.c+':'+i.f; }).join(';'); }
-function combosFor(meal){
+// Every food in the library (except dinners and the protein coffee) can go in any meal.
+// Combos: one food at 0.5x-3x, or any two foods at 0.5x-2x each. Stored compactly and sorted by calories.
+function comboData(){
   var sig = libSig();
-  if(comboCache.sig !== sig) comboCache = {sig:sig, byMeal:{}};
-  meal = isSnack(meal) ? 'snacks' : meal;
-  if(comboCache.byMeal[meal]) return comboCache.byMeal[meal];
-  var pool = S.library.filter(function(i){
-    if(i.cat==='Dinners' || i.cal<=0 || i.id==='coffee') return false;
-    if(i.cat==='Breakfast' && meal!=='breakfast') return false;
-    if(i.cat==='Lunch' && meal!=='lunch') return false;
-    return true;
-  });
-  var sides = pool.filter(function(i){ return i.cat==='Sides & Extras'; });
-  var mains = pool.filter(function(i){ return i.cat!=='Sides & Extras'; });
-  var aff = affOf(meal), list = [];
-  function push(parts){
-    var sum = zero();
-    parts.forEach(function(p){ sum = addM(sum, scaleM(p.it, p.q)); });
-    var pen = (parts.some(function(p){ return aff.indexOf(p.it.cat) >= 0; }) ? 0 : 6) + (parts.length > 1 ? 0.5 : 0) +
-      parts.reduce(function(a,p){ return a + (p.it.cat==='Sides & Extras' || aff.indexOf(p.it.cat) >= 0 ? 0 : 4); }, 0) +
-      parts.reduce(function(a,p){ return a + (p.q===1 ? 0 : (p.q%0.5===0 ? 0.08 : 0.15)); }, 0);
-    list.push({parts:parts, sum:sum, pen:pen});
-  }
-  pool.forEach(function(it){ QTYS.forEach(function(q){ push([{it:it,q:q}]); }); });
-  mains.forEach(function(m){ sides.forEach(function(sd){
-    QTYS.forEach(function(qm){ SIDE_QTYS.forEach(function(qs){ push([{it:m,q:qm},{it:sd,q:qs}]); }); });
-  }); });
-  // protein + a meal item (e.g. chicken + rice cup for lunch), both portions flexible
-  var prots = mains.filter(function(i){ return i.cat==='Proteins' && aff.indexOf('Proteins')>=0; });
-  var partners = mains.filter(function(i){ return i.cat!=='Proteins' && aff.indexOf(i.cat)>=0 && i.cat!=='Shakes & Coffee'; });
-  prots.forEach(function(pr){ partners.forEach(function(pt){
-    QTYS.forEach(function(qa){ SIDE_QTYS.forEach(function(qb){ push([{it:pr,q:qa},{it:pt,q:qb}]); }); });
-  }); });
-  comboCache.byMeal[meal] = list;
-  return list;
+  if(comboCache.sig === sig) return comboCache.data;
+  var pool = S.library.filter(function(i){ return i.cat!=='Dinners' && i.cal>0 && i.id!=='coffee'; });
+  var n = pool.length, sq = QTYS.length, pq = PAIR_QTYS.length;
+  var total = n*sq + (n*(n-1)/2)*pq*pq;
+  var A = new Int32Array(total), B = new Int32Array(total), QA = new Float32Array(total), QB = new Float32Array(total);
+  var CAL = new Float64Array(total), P = new Float64Array(total), C = new Float64Array(total), F = new Float64Array(total);
+  var k = 0;
+  for(var i=0;i<n;i++){ var it = pool[i];
+    for(var x=0;x<sq;x++){ var q = QTYS[x];
+      A[k]=i; B[k]=-1; QA[k]=q; QB[k]=0; CAL[k]=it.cal*q; P[k]=it.p*q; C[k]=it.c*q; F[k]=it.f*q; k++; } }
+  for(var i2=0;i2<n;i2++){ var a1 = pool[i2];
+    for(var j=i2+1;j<n;j++){ var b1 = pool[j];
+      for(var x2=0;x2<pq;x2++){ var qa = PAIR_QTYS[x2];
+        for(var y=0;y<pq;y++){ var qb = PAIR_QTYS[y];
+          A[k]=i2; B[k]=j; QA[k]=qa; QB[k]=qb;
+          CAL[k]=a1.cal*qa+b1.cal*qb; P[k]=a1.p*qa+b1.p*qb; C[k]=a1.c*qa+b1.c*qb; F[k]=a1.f*qa+b1.f*qb; k++; } } } }
+  var order = new Int32Array(total); for(var o=0;o<total;o++) order[o]=o;
+  var ord = Array.prototype.slice.call(order).sort(function(u,v){ return CAL[u]-CAL[v]; });
+  var calS = new Float64Array(total); for(var z=0;z<total;z++) calS[z] = CAL[ord[z]];
+  comboCache = {sig:sig, data:{pool:pool, A:A, B:B, QA:QA, QB:QB, CAL:CAL, P:P, C:C, F:F, ord:ord, calS:calS, n:total}};
+  return comboCache.data;
 }
+function lowerBound(arr, v){ var lo=0, hi=arr.length; while(lo<hi){ var m=(lo+hi)>>1; if(arr[m]<v) lo=m+1; else hi=m; } return lo; }
 function buildIdeas(meal, tgt, left){
-  var tol = S.settings.tol, list = combosFor(meal), out = [], cand = [];
-  var lim = Math.max(120, tgt.cal*0.4);
+  var tol = S.settings.tol, D = comboData();
+  var lim = Math.max(90, tgt.cal*0.25);
   var tc = Math.max(0.1,tol.cal), tp = Math.max(0.1,tol.p), tcc = Math.max(0.1,tol.c), tf = Math.max(0.1,tol.f);
-  for(var i=0;i<list.length;i++){
-    var o = list[i], sum = o.sum;
-    if(Math.abs(sum.cal - tgt.cal) > lim) continue;
-    if(sum.cal - left.cal > tol.cal || sum.c - left.c > tol.c || sum.f - left.f > tol.f) continue;
-    var n1 = Math.abs(sum.cal-tgt.cal)/tc, n2 = Math.abs(sum.p-tgt.p)/tp, n3 = Math.abs(sum.c-tgt.c)/tcc, n4 = Math.abs(sum.f-tgt.f)/tf;
+  var start = lowerBound(D.calS, tgt.cal - lim), end = lowerBound(D.calS, tgt.cal + lim + 1e-9);
+  var cand = [], cut = Infinity;
+  for(var z=start; z<end; z++){
+    var k = D.ord[z], cal = D.CAL[k], p = D.P[k], c = D.C[k], f = D.F[k];
+    if(cal - left.cal > tol.cal || c - left.c > tol.c || f - left.f > tol.f) continue;
+    var n1 = Math.abs(cal-tgt.cal)/tc, n2 = Math.abs(p-tgt.p)/tp, n3 = Math.abs(c-tgt.c)/tcc, n4 = Math.abs(f-tgt.f)/tf;
     var sc = 1.5*(n1<=1?0.25*n1*n1:n1*n1-0.75) + 1.2*(n2<=1?0.25*n2*n2:n2*n2-0.75) + (n3<=1?0.25*n3*n3:n3*n3-0.75) + (n4<=1?0.25*n4*n4:n4*n4-0.75);
-    cand.push([sc + o.pen, i, n1<=1&&n2<=1&&n3<=1&&n4<=1]);
+    var qa = D.QA[k], qb = D.QB[k];
+    sc += (D.B[k] >= 0 ? 0.5 : 0) + (qa===1 ? 0 : (qa%0.5===0 ? 0.08 : 0.15)) + (D.B[k] < 0 || qb===1 ? 0 : (qb%0.5===0 ? 0.08 : 0.15));
+    if(sc >= cut) continue;
+    cand.push([sc, k, n1<=1&&n2<=1&&n3<=1&&n4<=1]);
+    if(cand.length > 1500){ cand.sort(function(a,b){ return a[0]-b[0]; }); cand.length = 400; cut = cand[399][0]; }
   }
   cand.sort(function(a,b){ return a[0]-b[0]; });
-  for(var j=0;j<cand.length && j<400;j++){ var oo = list[cand[j][1]]; out.push({parts:oo.parts, sum:oo.sum, score:cand[j][0], hit:cand[j][2], fits:true}); }
-  var seenCombo = {}, uniq = [];
-  out.forEach(function(o){
-    var k = o.parts.map(function(p){ return p.it.id; }).join('+');
-    if(seenCombo[k]) return; seenCombo[k] = 1; uniq.push(o);
-  });
-  var seenMain = {}, first = [], rest = [];
-  uniq.forEach(function(o){ var m=o.parts[0].it.id; if(seenMain[m]) rest.push(o); else { seenMain[m]=1; first.push(o); } });
+  var out = [], seenCombo = {}, seenMain = {}, first = [], rest = [];
+  for(var j=0; j<cand.length && out.length<120; j++){
+    var kk = cand[j][1], ia = D.A[kk], ib = D.B[kk];
+    var key = ia+'+'+ib; if(seenCombo[key]) continue; seenCombo[key] = 1;
+    var parts = [{it:D.pool[ia], q:r2(D.QA[kk])}]; if(ib >= 0) parts.push({it:D.pool[ib], q:r2(D.QB[kk])});
+    var sum = {cal:r1(D.CAL[kk]), p:r1(D.P[kk]), c:r1(D.C[kk]), f:r1(D.F[kk])};
+    out.push({parts:parts, sum:sum, score:cand[j][0], hit:cand[j][2], fits:true});
+  }
+  out.forEach(function(o){ var m=o.parts[0].it.id; if(seenMain[m]) rest.push(o); else { seenMain[m]=1; first.push(o); } });
   return first.concat(rest).slice(0, 30);
 }
 
@@ -582,7 +582,7 @@ function sumW(list){ return list.reduce(function(s,m){ return s+wt(m); }, 0) || 
 
 function genPlan(d, avoid){
   var open = openMeals(d), base = subM(S.settings.targets, dayTotals(d)), results = [];
-  for(var t=0; t<20; t++){
+  for(var t=0; t<12; t++){
     var picks = {}, used = {}, rem = base, sum = zero(), empty = 0, fitPen = 0;
     for(var i=0; i<open.length; i++){
       var m = open[i], last = i===open.length-1;
@@ -723,6 +723,7 @@ function dinnerHTML(d){
   var h = '<section class="card dinner"><div class="card-h"><h2>Dinner</h2><span class="tag">Plan first</span></div>';
   if(!d.dinner){
     h += '<button class="btn primary wide" data-act="pick" data-where="dinner">+ Pick a recipe</button>';
+    h += '<button class="btn outline wide" style="margin-top:8px" data-act="pasteDinner">Paste dinner from a text</button>';
     h += '<p class="hint">Plan dinner first. Meal ideas for the rest of your day show up once it’s set.</p>';
     if(d.sides.length){ h += '<div class="subhead">Sides</div>'; d.sides.forEach(function(e){ h += entryHTML(e,'sides'); }); }
     return h + '</section>';
@@ -735,6 +736,7 @@ function dinnerHTML(d){
     '<div class="servrow"><div class="stepper"><button data-act="dec" data-where="dinner" data-uid="'+e.uid+'">−</button><span>'+fQ(e.qty)+'</span><button data-act="inc" data-where="dinner" data-uid="'+e.uid+'">+</button></div>'+
     '<div class="ofserv">'+(e.servings ? 'of '+fG(e.servings)+' servings' : 'servings')+'</div></div></div>';
 
+  h += '<div class="sharerow"><button class="linkbtn" data-act="shareDinner">Share dinner</button><button class="linkbtn" data-act="pasteDinner">Paste a different dinner</button></div>';
   var sg = dinnerSuggestion(d);
   if(sg){
     if(sg.full){
@@ -1077,6 +1079,41 @@ function saveItem(){
   }
 }
 
+/* ================= SHARE DINNER ================= */
+function dinnerCode(e){
+  var nm = String(e.name||'Dinner').replace(/[~\n\r]/g,' ').trim();
+  return 'DINNER~'+nm+'~'+r1(e.cal)+'~'+r1(e.p)+'~'+r1(e.c)+'~'+r1(e.f)+'~'+(e.servings?r2(e.servings):'')+'~'+String(e.serving||'').replace(/[~\n\r]/g,' ').trim()+'~';
+}
+function parseDinnerCode(txt){
+  var m = /DINNER~([^~\n]+)~([\d.]+)~([\d.]+)~([\d.]+)~([\d.]+)~([\d.]*)(?:~([^~\n]*)~)?/.exec(String(txt||''));
+  if(!m) return null;
+  return {name:m[1].trim(), cal:+m[2], p:+m[3], c:+m[4], f:+m[5], servings:m[6]?+m[6]:null, serving:(m[7]||'').trim()};
+}
+function openShareSheet(code){
+  openSheet('Share dinner', '<p class="hint" style="margin-top:0">Text this code to share tonight’s dinner. The other app sets the portion on its own.</p>'+
+    '<div class="field"><textarea id="shareCode" readonly style="min-height:90px">'+esc(code)+'</textarea></div>'+
+    '<button class="btn primary wide" data-act="copyShare">Copy code</button>');
+}
+function openPasteSheet(prefill){
+  openSheet('Paste dinner', '<p class="hint" style="margin-top:0">Long-press the box, tap Paste, then tap Use this dinner. You can paste the whole text message.</p>'+
+    '<div class="field"><textarea id="pasteCode" placeholder="DINNER~…" style="min-height:90px">'+esc(prefill||'')+'</textarea></div>'+
+    '<button class="btn primary wide" data-act="usePasted">Use this dinner</button>');
+}
+function applySharedDinner(info){
+  var it = null;
+  for(var i=0;i<S.library.length;i++){ if(S.library[i].cat==='Dinners' && S.library[i].name.toLowerCase()===info.name.toLowerCase()){ it = S.library[i]; break; } }
+  var added = false;
+  if(it){ it.cal=r1(info.cal); it.p=r1(info.p); it.c=r1(info.c); it.f=r1(info.f); if(info.servings) it.servings=info.servings; if(info.serving) it.serving=info.serving; }
+  else { it = {id:uid(), name:info.name, serving:info.serving||'1 serving', cat:'Dinners', cal:r1(info.cal), p:r1(info.p), c:r1(info.c), f:r1(info.f), servings:info.servings||null, calAuto:false}; S.library.push(it); added = true; }
+  var d = ensureDay(ui.dayKey);
+  d.dinner = makeEntry(it, 1);
+  if(d.noHold) d.noHold = false;
+  var sg = dinnerSuggestion(d);
+  if(sg && sg.q) d.dinner.qty = r2(sg.q);
+  ui.ideaPage = 0; save(); closeSheet(); render();
+  toast(info.name+' set · '+fQ(d.dinner.qty)+' serving'+(d.dinner.qty===1?'':'s')+(added?' · saved to library':''));
+}
+
 /* ================= ACTIONS ================= */
 function addToDay(where, it, qty){
   var d = ensureDay(ui.dayKey), e = makeEntry(it, qty||1);
@@ -1132,6 +1169,29 @@ var handlers = {
     if(w==='dinner') d.dinner = null;
     else { var l = listFor(d,w), i = l.findIndex(function(e){ return e.uid===b.dataset.uid; }); if(i>=0) l.splice(i,1); }
     ui.ideaPage = 0; save(); render();
+  },
+  shareDinner: function(){
+    var d = ensureDay(ui.dayKey); if(!d.dinner) return;
+    var code = dinnerCode(d.dinner);
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(code).then(function(){ toast('Dinner code copied. Paste it in a text.'); }, function(){ openShareSheet(code); });
+    } else openShareSheet(code);
+  },
+  copyShare: function(){ var ta=document.getElementById('shareCode'); if(ta) copyText(ta.value, ta); },
+  pasteDinner: function(){
+    if(navigator.clipboard && navigator.clipboard.readText && window.isSecureContext){
+      var done = false, timer = setTimeout(function(){ if(!done){ done = true; openPasteSheet(''); } }, 1500);
+      navigator.clipboard.readText().then(function(t){
+        var info = parseDinnerCode(t);
+        if(info){ clearTimeout(timer); done = true; applySharedDinner(info); }
+        else if(!done){ clearTimeout(timer); done = true; openPasteSheet(''); }
+      }, function(){ if(!done){ clearTimeout(timer); done = true; openPasteSheet(''); } });
+    } else openPasteSheet('');
+  },
+  usePasted: function(){
+    var ta=document.getElementById('pasteCode'), info=parseDinnerCode(ta && ta.value);
+    if(!info){ toast('No dinner code found. Paste the text that starts with DINNER~'); return; }
+    applySharedDinner(info);
   },
   useSuggest: function(b){ var d=ensureDay(ui.dayKey); if(d.dinner){ d.dinner.qty = r2(+b.dataset.q); save(); render(); toast('Dinner set to '+fQ(d.dinner.qty)+' servings'); } },
   ideaMode: function(b){ S.settings.ideaMode = b.dataset.mode; save(); render(); },
@@ -1200,11 +1260,11 @@ function step(b, delta){
 }
 function copyText(txt, ta){
   function fallback(){
-    try { ta.removeAttribute('readonly'); ta.focus(); ta.select(); ta.setSelectionRange(0, txt.length); var ok=document.execCommand('copy'); ta.setAttribute('readonly',''); toast(ok?'Backup copied ✓':'Select the text below and copy it'); }
+    try { ta.removeAttribute('readonly'); ta.focus(); ta.select(); ta.setSelectionRange(0, txt.length); var ok=document.execCommand('copy'); ta.setAttribute('readonly',''); toast(ok?'Copied ✓':'Select the text and copy it'); }
     catch(e){ toast('Select the text below and copy it'); }
   }
   if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(txt).then(function(){ toast('Backup copied ✓ Paste it somewhere safe'); }, fallback);
+    navigator.clipboard.writeText(txt).then(function(){ toast(ta && ta.id==='shareCode' ? 'Dinner code copied' : 'Backup copied ✓ Paste it somewhere safe'); }, fallback);
   } else fallback();
 }
 
