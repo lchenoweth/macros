@@ -231,6 +231,7 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
 .toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,20px);z-index:60;background:var(--ink);color:#fff;border:1px solid var(--pink);padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:all .2s;max-width:88vw;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .sharerow{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:-4px 0 10px}
+.stepper span{white-space:nowrap;padding:0 4px}
 </style>
 </head>
 <body>
@@ -263,7 +264,9 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
 'use strict';
 
 /* ================= CONSTANTS ================= */
-var APP_VERSION = '1.5.0';
+var APP_VERSION = '1.6.0';
+var CREATINE = {id:'creatine', name:'Creatine (Muscle Feast)', serving:'1 tablet', cat:'Shakes & Coffee', cal:8.3, p:0, c:2, f:0, servings:null, calAuto:false, step:1, unit:'tablet', units:'tablets', dailyQty:3};
+var DAILY_IDS = ['coffee','creatine'];
 var KEY = 'macroPlanner.v1';
 var MAC = ['cal','p','c','f'];
 var MEALS = [
@@ -360,6 +363,7 @@ function normalize(o){
   };
   s.settings.targets = Object.assign({}, d.settings.targets, st.targets||{});
   s.settings.tol = Object.assign({}, d.settings.tol, st.tol||{});
+  if(!s.settings.creatineSeeded){ if(!s.library.some(function(i){ return i.id==='creatine'; })) s.library.push(JSON.parse(JSON.stringify(CREATINE))); s.settings.creatineSeeded = true; }
   s.library.forEach(function(it){ if(!it.id) it.id=uid(); MAC.forEach(function(m){ it[m]=r1(it[m]); }); if(CATS.indexOf(it.cat)<0) it.cat='Snacks'; });
   Object.keys(s.days).forEach(function(k){
     var day = s.days[k] || {};
@@ -399,12 +403,21 @@ function ensureDay(k){
     S.days[k] = d;
     save();
   }
+  // Creatine: added once to each day from today on (also to days opened before this version)
+  if(!d.creatineAdded && k >= todayKey()){
+    var cr = getItem('creatine');
+    if(cr && !d.meals.first.some(function(e){ return e.itemId==='creatine'; })) d.meals.first.push(makeEntry(cr, cr.dailyQty || 3));
+    d.creatineAdded = true;
+    save();
+  }
   return d;
 }
 function makeEntry(it, qty){
   return { uid:uid(), itemId:it.id, name:it.name, serving:it.serving||'', cat:it.cat,
-    cal:r1(it.cal), p:r1(it.p), c:r1(it.c), f:r1(it.f), servings:it.servings||null, qty:r2(qty||1), eaten:false };
+    cal:r1(it.cal), p:r1(it.p), c:r1(it.c), f:r1(it.f), servings:it.servings||null, qty:r2(qty||1), eaten:false,
+    step:it.step||null, unit:it.unit||null, units:it.units||null };
 }
+function qtyLabel(e){ return e.unit ? fQ(e.qty)+' '+(e.qty===1 ? e.unit : (e.units||e.unit+'s')) : fQ(e.qty); }
 function em(e){ return scaleM(e, e.qty); }
 function sumEntries(list){ return list.reduce(function(t,e){ return addM(t, em(e)); }, zero()); }
 function allEntries(d){
@@ -510,7 +523,7 @@ function libSig(){ return S.library.map(function(i){ return i.id+':'+i.cat+':'+i
 function comboData(){
   var sig = libSig();
   if(comboCache.sig === sig) return comboCache.data;
-  var pool = S.library.filter(function(i){ return i.cat!=='Dinners' && i.cal>0 && i.id!=='coffee'; });
+  var pool = S.library.filter(function(i){ return i.cat!=='Dinners' && i.cal>0 && DAILY_IDS.indexOf(i.id)<0; });
   var n = pool.length, sq = QTYS.length, pq = PAIR_QTYS.length;
   var total = n*sq + (n*(n-1)/2)*pq*pq;
   var A = new Int32Array(total), B = new Int32Array(total), QA = new Float32Array(total), QB = new Float32Array(total);
@@ -716,7 +729,7 @@ function entryHTML(e, where){
     '<div class="item-name">'+esc(e.name)+(e.serving?'<span class="sv">'+esc(e.serving)+'</span>':'')+'</div>'+
     '<button class="xmini" data-act="remove" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="Remove">&times;</button></div>'+
     '<div class="item-bot"><div class="macline">'+macLine(m,true)+'</div>'+
-    '<div class="stepper"><button data-act="dec" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="Less">−</button><span>'+fQ(e.qty)+'</span><button data-act="inc" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="More">+</button></div></div></div>';
+    '<div class="stepper"><button data-act="dec" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="Less">−</button><span>'+qtyLabel(e)+'</span><button data-act="inc" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="More">+</button></div></div></div>';
 }
 
 function dinnerHTML(d){
@@ -1255,7 +1268,8 @@ var handlers = {
 };
 function step(b, delta){
   var d = ensureDay(ui.dayKey), e = findEntry(d, b.dataset.where, b.dataset.uid); if(!e) return;
-  e.qty = Math.max(0.25, r2(e.qty + delta));
+  var st = e.step || 0.25;
+  e.qty = Math.max(st, r2(e.qty + (delta > 0 ? st : -st)));
   save(); render();
 }
 function copyText(txt, ta){
