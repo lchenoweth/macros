@@ -232,6 +232,12 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .sharerow{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:-4px 0 10px}
 .stepper span{white-space:nowrap;padding:0 4px}
+.stepper button.qty{width:auto;min-width:44px;padding:0 6px;font-size:15px;font-weight:800;color:var(--text);white-space:nowrap;text-decoration:underline dotted var(--muted);text-underline-offset:4px}
+.qchips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px}
+.qchips button{min-width:52px;height:40px;border-radius:12px;border:0;background:var(--chip);color:var(--text);font-weight:800;font-size:15px}
+.qchips button.on{background:var(--pink);color:#fff}
+.qprev{font-size:14px;color:var(--muted);margin:2px 0 14px}
+.qprev b{color:var(--text)}
 </style>
 </head>
 <body>
@@ -264,7 +270,7 @@ input,select,textarea{font-family:inherit;font-size:16px;color:var(--text)}
 'use strict';
 
 /* ================= CONSTANTS ================= */
-var APP_VERSION = '1.6.0';
+var APP_VERSION = '1.7.0';
 var CREATINE = {id:'creatine', name:'Creatine (Muscle Feast)', serving:'1 tablet', cat:'Shakes & Coffee', cal:8.3, p:0, c:2, f:0, servings:null, calAuto:false, step:1, unit:'tablet', units:'tablets', dailyQty:3};
 var DAILY_IDS = ['coffee','creatine'];
 var KEY = 'macroPlanner.v1';
@@ -379,7 +385,7 @@ function normalize(o){
 }
 function load(){
   try { var raw = localStorage.getItem(KEY); if(raw) return normalize(JSON.parse(raw)); } catch(e){}
-  return defaultState();
+  return normalize(defaultState());
 }
 function save(){
   try { localStorage.setItem(KEY, JSON.stringify(S)); }
@@ -729,7 +735,7 @@ function entryHTML(e, where){
     '<div class="item-name">'+esc(e.name)+(e.serving?'<span class="sv">'+esc(e.serving)+'</span>':'')+'</div>'+
     '<button class="xmini" data-act="remove" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="Remove">&times;</button></div>'+
     '<div class="item-bot"><div class="macline">'+macLine(m,true)+'</div>'+
-    '<div class="stepper"><button data-act="dec" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="Less">−</button><span>'+qtyLabel(e)+'</span><button data-act="inc" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="More">+</button></div></div></div>';
+    '<div class="stepper"><button data-act="dec" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="Less">−</button><button class="qty" data-act="qtyEdit" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="Type an amount">'+qtyLabel(e)+'</button><button data-act="inc" data-where="'+where+'" data-uid="'+e.uid+'" aria-label="More">+</button></div></div></div>';
 }
 
 function dinnerHTML(d){
@@ -746,7 +752,7 @@ function dinnerHTML(d){
     '<div class="item-name">'+esc(e.name)+(e.serving?'<span class="sv">'+esc(e.serving)+'</span>':'')+'</div>'+
     '<button class="btn sm" data-act="pick" data-where="dinner">Change</button>'+
     '<button class="xmini" data-act="remove" data-where="dinner" data-uid="'+e.uid+'" aria-label="Remove">&times;</button></div>'+
-    '<div class="servrow"><div class="stepper"><button data-act="dec" data-where="dinner" data-uid="'+e.uid+'">−</button><span>'+fQ(e.qty)+'</span><button data-act="inc" data-where="dinner" data-uid="'+e.uid+'">+</button></div>'+
+    '<div class="servrow"><div class="stepper"><button data-act="dec" data-where="dinner" data-uid="'+e.uid+'">−</button><button class="qty" data-act="qtyEdit" data-where="dinner" data-uid="'+e.uid+'" aria-label="Type an amount">'+fQ(e.qty)+'</button><button data-act="inc" data-where="dinner" data-uid="'+e.uid+'">+</button></div>'+
     '<div class="ofserv">'+(e.servings ? 'of '+fG(e.servings)+' servings' : 'servings')+'</div></div></div>';
 
   h += '<div class="sharerow"><button class="linkbtn" data-act="shareDinner">Share dinner</button><button class="linkbtn" data-act="pasteDinner">Paste a different dinner</button></div>';
@@ -978,6 +984,7 @@ function closeSheet(){
 }
 backdrop.addEventListener('click', closeSheet);
 document.addEventListener('keydown', function(e){ if(e.key==='Escape' && sheet.classList.contains('open')) closeSheet(); });
+document.addEventListener('keydown', function(e){ if(e.key==='Enter' && e.target && e.target.id==='q_amt'){ e.preventDefault(); handlers.qtySet(); } });
 
 var drag = null;
 sheetHead.addEventListener('pointerdown', function(e){
@@ -1035,7 +1042,8 @@ function openItemSheet(id, opts){
   var v = it || {name:'', serving:'', cat:opts.cat||'Snacks', cal:'', p:'', c:'', f:'', servings:''};
   var h = '';
   if(it){
-    h += '<h3 style="margin-bottom:10px">Add to '+esc(dayShort(ui.dayKey))+'</h3><div class="addgrid">'+
+    h += '<h3 style="margin-bottom:10px">Add to '+esc(dayShort(ui.dayKey))+'</h3>'+
+      amountFields('add_amt', 1, it)+'<div class="addgrid">'+
       mealsOf(ensureDay(ui.dayKey)).map(function(m){ return '<button class="btn primary" data-act="addTo" data-where="'+m.key+'">'+esc(m.label)+'</button>'; }).join('')+
       '<button class="btn dinner" data-act="addTo" data-where="dinner">Dinner (main)</button>'+
       '<button class="btn dinner" data-act="addTo" data-where="side">Dinner side</button></div>'+
@@ -1056,6 +1064,7 @@ function openItemSheet(id, opts){
     (it ? '<button class="btn danger wide" style="margin-top:10px" data-act="deleteItem">Delete item</button>' : '');
   openSheet(it ? it.name : 'New item', h);
   updateCalcHint();
+  if(it) updateQtyPrev('add_amt');
 }
 function updateCalcHint(){
   var el = document.getElementById('calcHint'); if(!el) return;
@@ -1125,6 +1134,40 @@ function applySharedDinner(info){
   if(sg && sg.q) d.dinner.qty = r2(sg.q);
   ui.ideaPage = 0; save(); closeSheet(); render();
   toast(info.name+' set · '+fQ(d.dinner.qty)+' serving'+(d.dinner.qty===1?'':'s')+(added?' · saved to library':''));
+}
+
+/* ================= CUSTOM PORTIONS ================= */
+var QCHIPS = [[0.25,'¼'],[0.33,'⅓'],[0.5,'½'],[0.67,'⅔'],[0.75,'¾'],[1,'1'],[1.25,'1¼'],[1.5,'1½'],[2,'2']];
+function unitWord(src){ return src.unit ? (src.units||src.unit+'s') : 'servings'; }
+function amountFields(id, q, src){
+  var chips = src.unit ? '' : '<div class="qchips">'+QCHIPS.map(function(c){ return '<button data-act="qChip" data-for="'+id+'" data-q="'+c[0]+'">'+c[1]+'</button>'; }).join('')+'</div>';
+  return '<div class="field"><label>Amount ('+esc(unitWord(src))+(src.serving && !src.unit ? ' · 1 = '+esc(src.serving) : '')+')</label>'+
+    '<input id="'+id+'" class="qamt" type="number" inputmode="decimal" step="any" min="0" value="'+fQ(q)+'"></div>'+chips+
+    '<div class="qprev" id="'+id+'_prev"></div>';
+}
+function qtySource(id){
+  if(id==='add_amt'){ return ui.sheet && getItem(ui.sheet.id); }
+  if(ui.sheet && ui.sheet.type==='qty'){ var d=ensureDay(ui.dayKey); return findEntry(d, ui.sheet.where, ui.sheet.uid); }
+  return null;
+}
+function updateQtyPrev(id){
+  var inp = document.getElementById(id), out = document.getElementById(id+'_prev'), src = qtySource(id);
+  if(!inp || !out || !src) return;
+  var q = num(inp.value);
+  Array.prototype.forEach.call(document.querySelectorAll('[data-act="qChip"][data-for="'+id+'"]'), function(c){ c.classList.toggle('on', q !== null && Math.abs(+c.dataset.q - q) < 0.005); });
+  out.innerHTML = q && q > 0 ? '= '+macLine(scaleM(src, q), true) : 'Type an amount, like 0.5 or 1.5';
+}
+function openQtySheet(where, id){
+  var d = ensureDay(ui.dayKey), e = findEntry(d, where, id); if(!e) return;
+  ui.sheet = {type:'qty', where:where, uid:id};
+  openSheet(e.name, amountFields('q_amt', e.qty, e)+'<button class="btn primary wide" data-act="qtySet">Set amount</button>');
+  updateQtyPrev('q_amt');
+  var inp = document.getElementById('q_amt'); if(inp){ inp.focus(); inp.select(); }
+}
+function readAmt(id){
+  var q = num((document.getElementById(id)||{}).value);
+  if(!q || q <= 0){ toast('Type an amount bigger than 0'); return null; }
+  return r2(q);
 }
 
 /* ================= ACTIONS ================= */
@@ -1238,7 +1281,15 @@ var handlers = {
   newItem: function(){ openItemSheet(null, {cat: ui.libCat!=='All' ? ui.libCat : 'Snacks'}); },
   openItem: function(b){ openItemSheet(b.dataset.id); },
   libCat: function(b){ ui.libCat = b.dataset.cat; renderLibrary(); },
-  addTo: function(b){ var it=getItem(ui.sheet.id), w=b.dataset.where; closeSheet(); if(it) addToDay(w, it); },
+  addTo: function(b){ var it=getItem(ui.sheet.id), w=b.dataset.where, q=readAmt('add_amt'); if(q===null) return; closeSheet(); if(it) addToDay(w, it, q); },
+  qtyEdit: function(b){ openQtySheet(b.dataset.where, b.dataset.uid); },
+  qChip: function(b){ var inp=document.getElementById(b.dataset.for); if(inp){ inp.value=b.dataset.q; updateQtyPrev(b.dataset.for); } },
+  qtySet: function(){
+    var s=ui.sheet; if(!s || s.type!=='qty') return;
+    var q=readAmt('q_amt'); if(q===null) return;
+    var d=ensureDay(ui.dayKey), e=findEntry(d, s.where, s.uid); if(!e){ closeSheet(); return; }
+    e.qty=q; save(); closeSheet(); render(); toast(e.name+' · '+qtyLabel(e));
+  },
   saveItem: saveItem,
   deleteItem: function(){
     var it = getItem(ui.sheet.id); if(!it) return;
@@ -1291,6 +1342,7 @@ document.addEventListener('input', function(e){
   if(t.id==='libSearch'){ ui.libSearch = t.value; renderLibList(); }
   else if(t.id==='pickSearch' && ui.sheet){ ui.sheet.q = t.value; renderPicker(); }
   else if(t.classList && t.classList.contains('mf')) updateCalcHint();
+  else if(t.classList && t.classList.contains('qamt')) updateQtyPrev(t.id);
 });
 document.addEventListener('change', function(e){
   var t = e.target, path = t.dataset && t.dataset.path; if(!path) return;
